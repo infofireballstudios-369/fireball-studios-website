@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+  <defs>
+    <linearGradient id="skyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#E2E8F0"/>
+      <stop offset="100%" stop-color="#F8FAFC"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="500" fill="url(#skyGrad)"/>
+  <rect x="120" y="180" width="200" height="250" fill="#fff" stroke="#2563EB" stroke-width="2"/>
+  <rect x="340" y="120" width="180" height="310" fill="#F1F5F9" stroke="#2563EB" stroke-width="2"/>
+  <rect x="540" y="200" width="160" height="230" fill="#fff" stroke="#2563EB" stroke-width="2"/>
+  <rect x="150" y="220" width="50" height="50" fill="#DBEAFE" stroke="#60A5FA" stroke-width="1"/>
+  <rect x="230" y="220" width="50" height="50" fill="#DBEAFE" stroke="#60A5FA" stroke-width="1"/>
+  <rect x="150" y="300" width="50" height="50" fill="#DBEAFE" stroke="#60A5FA" stroke-width="1"/>
+  <rect x="230" y="300" width="50" height="50" fill="#DBEAFE" stroke="#60A5FA" stroke-width="1"/>
+  <rect x="370" y="160" width="55" height="55" fill="#DBEAFE" stroke="#60A5FA" stroke-width="1"/>
+  <rect x="440" y="160" width="55" height="55" fill="#DBEAFE" stroke="#60A5FA" stroke-width="1"/>
+  <rect x="370" y="240" width="55" height="55" fill="#DBEAFE" stroke="#60A5FA" stroke-width="1"/>
+  <rect x="440" y="240" width="55" height="55" fill="#DBEAFE" stroke="#60A5FA" stroke-width="1"/>
+  <rect x="370" y="320" width="55" height="55" fill="#DBEAFE" stroke="#60A5FA" stroke-width="1"/>
+  <rect x="440" y="320" width="55" height="55" fill="#DBEAFE" stroke="#60A5FA" stroke-width="1"/>
+  <rect x="570" y="240" width="45" height="45" fill="#DBEAFE" stroke="#60A5FA" stroke-width="1"/>
+  <rect x="640" y="240" width="45" height="45" fill="#DBEAFE" stroke="#60A5FA" stroke-width="1"/>
+  <rect x="570" y="310" width="45" height="45" fill="#DBEAFE" stroke="#60A5FA" stroke-width="1"/>
+  <rect x="640" y="310" width="45" height="45" fill="#DBEAFE" stroke="#60A5FA" stroke-width="1"/>
+  <rect x="0" y="430" width="800" height="70" fill="#E2E8F0"/>
+  <circle cx="650" cy="80" r="35" fill="#FEF3C7" opacity="0.6"/>
+</svg>

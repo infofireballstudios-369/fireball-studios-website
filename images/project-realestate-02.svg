@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200">
+  <rect width="400" height="200" fill="#F1F5F9"/>
+  <rect x="60" y="50" width="280" height="130" fill="#fff" stroke="#2563EB" stroke-width="1.5"/>
+  <rect x="60" y="50" width="280" height="30" fill="#2563EB" opacity="0.15"/>
+  <rect x="85" y="95" width="30" height="30" fill="#DBEAFE"/>
+  <rect x="135" y="95" width="30" height="30" fill="#DBEAFE"/>
+  <rect x="185" y="95" width="30" height="30" fill="#DBEAFE"/>
+  <rect x="235" y="95" width="30" height="30" fill="#DBEAFE"/>
+  <rect x="285" y="95" width="30" height="30" fill="#DBEAFE"/>
+  <rect x="85" y="140" width="30" height="30" fill="#DBEAFE"/>
+  <rect x="135" y="140" width="30" height="30" fill="#DBEAFE"/>
+  <rect x="285" y="140" width="30" height="30" fill="#DBEAFE"/>
+  <rect x="175" y="140" width="60" height="40" fill="#60A5FA" opacity="0.3"/>
+  <rect x="0" y="180" width="400" height="20" fill="#E2E8F0"/>
+  <text x="200" y="25" text-anchor="middle" fill="#2563EB" font-family="sans-serif" font-size="10" font-weight="600">COMMERCIAL</text>
+</svg>

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200">
+  <rect width="400" height="200" fill="#F1F5F9"/>
+  <rect x="60" y="40" width="280" height="130" fill="#fff" stroke="#2563EB" stroke-width="1.5"/>
+  <circle cx="200" cy="105" r="45" fill="none" stroke="#2563EB" stroke-width="2"/>
+  <circle cx="200" cy="105" r="25" fill="none" stroke="#60A5FA" stroke-width="1.5"/>
+  <line x1="200" y1="60" x2="200" y2="150" stroke="#60A5FA" stroke-width="1"/>
+  <line x1="155" y1="105" x2="245" y2="105" stroke="#60A5FA" stroke-width="1"/>
+  <rect x="70" y="50" width="60" height="15" fill="#DBEAFE"/>
+  <rect x="70" y="75" width="40" height="10" fill="#DBEAFE"/>
+  <text x="200" y="25" text-anchor="middle" fill="#2563EB" font-family="sans-serif" font-size="10" font-weight="600">FEA ANALYSIS</text>
+</svg>
