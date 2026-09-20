@@ -67,6 +67,25 @@ revealElements.forEach((el, index) => {
 // ===== CONTACT FORM =====
 // The enquiry form posts directly to FormSubmit.
 
+// ===== SENT CONFIRMATION BANNER =====
+// When FormSubmit redirects back with ?sent=1, reveal the confirmation
+// banner, scroll to it, and strip the query string so a refresh doesn't
+// re-show it.
+(function () {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('sent') !== '1') return;
+
+  const banner = document.getElementById('sentBanner');
+  if (!banner) return;
+
+  banner.classList.add('is-visible');
+  banner.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+  if (window.history && window.history.replaceState) {
+    window.history.replaceState({}, document.title, window.location.pathname + '#contactForm');
+  }
+})();
+
 // ===== CLOSE MOBILE MENU ON LINK CLICK =====
 document.querySelectorAll('.mobile-menu a').forEach(link => {
   link.addEventListener('click', () => {

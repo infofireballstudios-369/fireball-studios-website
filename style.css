@@ -15,6 +15,56 @@ h1, h2, h3, h4 { font-weight: 700; line-height: 1.2; }
 h2 { font-size: clamp(2.2rem, 5vw, 3.8rem); margin-bottom: 1rem; }
 h1 { font-size: clamp(2.8rem, 6vw, 5rem); font-weight: 800; line-height: 1.1; }
 
+/* ===== PAGE HERO ===== */
+.page-hero h1 { margin-bottom: 3rem; }
+
+/* ===== SENT CONFIRMATION BANNER ===== */
+.sent-banner{
+  display: none;
+  align-items: flex-start;
+  gap: 16px;
+  background: #DCFCE7;
+  color: #14532D;
+  border: 1px solid #86EFAC;
+  border-left: 4px solid #16A34A;
+  border-radius: 10px;
+  padding: 20px 24px;
+  margin-bottom: 40px;
+}
+.sent-banner.is-visible{
+  display: flex;
+}
+.sent-banner > i{
+  color: #16A34A;
+  font-size: 1.6rem;
+  line-height: 1;
+  margin-top: 2px;
+  flex: 0 0 auto;
+}
+.sent-banner strong{
+  display: block;
+  font-size: 1.05rem;
+  margin-bottom: 4px;
+}
+.sent-banner p{
+  margin: 0;
+  opacity: 0.85;
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+.sent-banner a{
+  color: #166534;
+  text-decoration: underline;
+  font-weight: 500;
+}
+@media (max-width: 600px){
+  .sent-banner{
+    padding: 16px 18px;
+    gap: 12px;
+  }
+  .sent-banner > i{ font-size: 1.3rem; }
+}
+
 /* ===== COLOR VARIABLES ===== */
 :root {
   --primary: #0B1F33;
