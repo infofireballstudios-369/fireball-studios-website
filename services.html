@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Services – 3D Visualisation &amp; Engineering | Fireball Studios</title>
+  <meta name="description" content="Fireball Studios offers 3D architectural, real estate and automotive visualisation, CAD &amp; 3D modelling, engineering analysis and professional documentation services.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Two-column service grid, larger tiles with roomier spacing */
+    .services-list .service-grid-2x2{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:28px;
+    }
+    .services-list .service-grid-2x2 .service-card{
+      padding:40px 38px 46px;
+      min-height:280px;
+    }
+    .services-list .service-grid-2x2 .service-card h3{
+      font-size:1.5rem;
+      margin:10px 0 14px;
+      line-height:1.3;
+    }
+    .services-list .service-grid-2x2 .service-card p{
+      font-size:1.02rem;
+      line-height:1.7;
+      margin-bottom:18px;
+    }
+    .services-list .service-grid-2x2 .service-card .num{
+      font-size:1rem;
+    }
+
+    @media (max-width:800px){
+      .services-list .service-grid-2x2{
+        grid-template-columns:1fr;
+        gap:20px;
+      }
+      .services-list .service-grid-2x2 .service-card{
+        padding:32px 26px 42px;
+        min-height:0;
+      }
+      .services-list .service-grid-2x2 .service-card h3{
+        font-size:1.3rem;
+      }
+    }
+  </style>
+  <link rel="canonical" href="https://fireballstudios.co.uk/services.html">
+  <link rel="icon" type="image/png" href="images/logo.png">
+</head>
+<body>
+  <header id="mainHeader" class="main-header">
+    <div class="container header-inner">
+      <div class="logo"><a href="index.html"><img src="images/logo.png" alt="Fireball Studios" class="brand-logo"><span>Fireball Studios</span></a></div>
+      <nav class="nav-desktop">
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="services.html" class="active">Services</a></li>
+          <li><a href="projects.html">Projects</a></li>
+          <li><a href="process.html">Process</a></li>
+          <li><a href="industries.html">Industries</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+        <a href="contact.html" class="btn-cta-header">START A PROJECT <i class="fas fa-arrow-right"></i></a>
+      </nav>
+      <button class="hamburger" id="hamburgerBtn" aria-label="Menu" aria-controls="mobileMenu" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+    <div class="mobile-menu" id="mobileMenu">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="services.html">Services</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="process.html">Process</a></li>
+        <li><a href="industries.html">Industries</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="contact.html" class="btn-cta-mobile">START A PROJECT →</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <section class="page-hero section-pad" style="padding-top:140px; background:#F1F5F9;">
+    <div class="container">
+      <span class="section-tag">WHAT WE OFFER</span>
+      <h1 style="font-size:clamp(3rem,6vw,5rem);">Services for Real Estate, Automobile &amp; Engineering</h1>
+      <p style="font-size:1.3rem;opacity:0.7;max-width:700px;">From architectural and automotive visualisation to engineering analysis – we deliver premium visuals and technical precision.</p>
+    </div>
+  </section>
+
+  <section class="services-list section-pad">
+    <div class="container">
+      <div class="service-grid-2x2">
+        <div class="service-card">
+          <span class="num">01</span>
+          <h3>3D Architectural Visualisation</h3>
+          <p>Photorealistic renders, cinematic walkthrough animations, and fully interactive 3D tours that let clients explore a property long before construction begins. Ideal for real estate marketing, planning applications, design review and investor presentations.</p>
+        </div>
+        <div class="service-card">
+          <span class="num">02</span>
+          <h3>3D Automotive Visualisation</h3>
+          <p>Photorealistic car renders, dynamic animations, real-time configurators, and interactive 3D experiences built for automotive design, customisation, marketing and product presentation. Perfect for manufacturers, dealerships, tuners and enthusiasts.</p>
+        </div>
+        <div class="service-card">
+          <span class="num">03</span>
+          <h3>CAD &amp; 3D Modelling</h3>
+          <p>Detailed 3D CAD models, complex assemblies, and manufacturing-ready engineering geometry for any industry — from concept sketches and reverse engineering to drawings ready for fabrication, 3D printing or CNC production.</p>
+        </div>
+        <div class="service-card">
+          <span class="num">04</span>
+          <h3>Professional Documentation</h3>
+          <p>Comprehensive engineering reports, technical drawings, simulation summaries and compliance documentation that support project delivery, regulatory approval and stakeholder sign-off across the entire project lifecycle.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div class="footer-col"><h3>Fireball Studios</h3><p>Bringing Ideas to Life, Virtually</p></div>
+      <div class="footer-col"><h4>Navigation</h4><ul><li><a href="services.html">Services</a></li><li><a href="projects.html">Projects</a></li><li><a href="process.html">Process</a></li><li><a href="industries.html">Industries</a></li><li><a href="about.html">About</a></li><li><a href="contact.html">Contact</a></li></ul></div>
+      <div class="footer-col"><h4>Services</h4><ul><li><a href="visualisation.html">3D Architectural Visualisation</a></li><li><a href="services.html">3D Automotive Visualisation</a></li><li><a href="cad-modelling.html">CAD &amp; 3D Modelling</a></li><li><a href="services.html">Professional Documentation</a></li></ul></div>
+      <div class="footer-col"><h4>Contact</h4><p><i class="fas fa-envelope"></i> <a href="mailto:info@fireballstudios.co.uk">info@fireballstudios.co.uk</a></p><p><i class="fas fa-map-marker-alt"></i> London, UK</p><div class="social"><a href="https://www.linkedin.com/company/fireball-studios-uk/" target="_blank" rel="noopener noreferrer" aria-label="Fireball Studios on LinkedIn"><i class="fab fa-linkedin-in" aria-hidden="true"></i></a><a href="https://x.com/Fireball_stud" target="_blank" rel="noopener noreferrer" aria-label="Fireball Studios on X"><i class="fab fa-x-twitter" aria-hidden="true"></i></a></div></div>
+    </div>
+    <div class="footer-bottom"><p>© 2026 Fireball Studios · <a href="privacy.html">Privacy Policy</a> · <a href="terms.html">Terms &amp; Conditions</a></p></div>
+  </footer>
+  <button id="backTop" class="back-top" aria-label="Back to top"><i class="fas fa-arrow-up"></i></button>
+  <script src="script.js"></script>
+</body>
+</html>
