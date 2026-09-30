@@ -1,3 +1,38 @@
+// Google Analytics 4
+(function() {
+  var GA_MEASUREMENT_ID = 'G-7RV5GM0GCF'; // <-- replace with your real ID
+  var script = document.createElement('script');
+  script.async = true;
+  script.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_MEASUREMENT_ID;
+  document.head.appendChild(script);
+
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  window.gtag = gtag;
+  gtag('js', new Date());
+  gtag('config', GA_MEASUREMENT_ID);
+})();
+
+// Track phone and email clicks
+document.addEventListener('click', function(e) {
+  var link = e.target.closest('a');
+  if (!link) return;
+
+  if (link.href.startsWith('tel:')) {
+    gtag('event', 'phone_click', {
+      event_category: 'Contact',
+      event_label: link.href
+    });
+  }
+
+  if (link.href.startsWith('mailto:')) {
+    gtag('event', 'email_click', {
+      event_category: 'Contact',
+      event_label: link.href
+    });
+  }
+});
+
 // ===== MOBILE MENU =====
 const hamburger = document.getElementById('hamburgerBtn');
 const mobileMenu = document.getElementById('mobileMenu');
