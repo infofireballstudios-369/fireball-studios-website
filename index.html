@@ -4,11 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>3D Visualisation and Engineering Design in London | Fireball Studios</title>
-  <meta name="description" content="London 3D visualisation and engineering design studio for property, architecture, automotive, CAD, FEA and CFD projects across the UK and Europe.">
+
+  <!-- Benefit-led meta description -->
+  <meta name="description" content="Fireball Studios creates photorealistic 3D visualisation, CAD models and engineering analysis for property, automotive and product projects across the UK and Europe.">
+
   <meta property="og:title" content="Fireball Studios – 3D Visualisation &amp; Engineering Design">
   <meta property="og:description" content="Premium 3D visualisation and engineering design for real estate and industry.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://fireballstudios.co.uk/">
+  <meta property="og:image" content="https://fireballstudios.co.uk/images/logo.png">
+  <meta property="og:image:alt" content="Fireball Studios – 3D Visualisation &amp; Engineering Design">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
@@ -22,7 +28,7 @@
       display:grid;
       grid-template-columns:minmax(0,0.85fr) minmax(0,1.15fr);
       gap:clamp(24px,4vw,56px);
-      align-items:stretch; /* Ensures both columns stretch to the same height */
+      align-items:stretch;
     }
     .hero .hero-image{
       display:flex;
@@ -32,8 +38,8 @@
     .hero .hero-image .hero-interactive{
       display:block;
       width:100%;
-      height:100%;       /* Fills the stretched column height */
-      min-height:600px;  /* Much taller to remove empty space */
+      height:100%;
+      min-height:600px;
       border:0;
       border-radius:12px;
       overflow:hidden;
@@ -44,11 +50,10 @@
     }
 
     /* =========================================================
-       AUTOMOTIVE CONFIGURATOR – full-width, tall enough that the
-       panel options are visible without inner scrolling
+       AUTOMOTIVE CONFIGURATOR
        ========================================================= */
     .auto-config{
-      padding-top: 140px; /* More space between courtyard and automotive */
+      padding-top: 140px;
       padding-bottom: 100px;
     }
     .auto-config .auto-config-frame{
@@ -69,7 +74,7 @@
     }
 
     /* =========================================================
-       INTRO – clean, properly centred block
+       INTRO
        ========================================================= */
     .intro-centered .intro-grid{
       display:block;
@@ -112,7 +117,6 @@
     }
 
     @media (max-width:700px){
-      /* let the configurator breathe edge-to-edge on phones */
       .auto-config .container{
         padding-left:0;
         padding-right:0;
@@ -122,7 +126,7 @@
         padding-right:20px;
       }
       .auto-config .auto-config-frame{
-        height:1700px;          /* stage + full options panel */
+        height:1700px;
         min-height:0;
         border-radius:0;
         border-left:0;
@@ -137,20 +141,46 @@
       }
     }
   </style>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {"@type":"Question","name":"What services does Fireball Studios provide?","acceptedAnswer":{"@type":"Answer","text":"Fireball Studios provides 3D architectural, real estate and automotive visualisation, CAD and 3D modelling, mechanical design, FEA, CFD and thermal analysis, design optimisation, product visualisation, prototyping support and technical documentation."}},
-    {"@type":"Question","name":"Where is Fireball Studios based?","acceptedAnswer":{"@type":"Answer","text":"Fireball Studios is based in London, UK, and works remotely with clients across the UK and Europe."}},
-    {"@type":"Question","name":"Can you create interactive 3D property visualisations?","acceptedAnswer":{"@type":"Answer","text":"Yes. Fireball Studios creates interactive property experiences, walkthroughs and photorealistic renders for design review and property presentation."}},
-    {"@type":"Question","name":"Can you create interactive vehicle configurators?","acceptedAnswer":{"@type":"Answer","text":"Yes. Fireball Studios creates interactive automotive visualisation, including photorealistic car renders, animations and real-time configurators for design, customisation and marketing."}},
-    {"@type":"Question","name":"Do you provide CFD and thermal analysis?","acceptedAnswer":{"@type":"Answer","text":"Yes. CFD services can assess fluid flow, pressure, velocity, heat transfer and thermal behaviour, with outputs and technical documentation suited to the agreed project scope."}},
-    {"@type":"Question","name":"How can I start a project?","acceptedAnswer":{"@type":"Answer","text":"Send a brief through the enquiry form or email info@fireballstudios.co.uk with your goals, desired outputs, target date and available source material."}}
-  ]
-}
-</script><link rel="canonical" href="https://fireballstudios.co.uk/"><script type="application/ld+json" id="business-schema">{"@context": "https://schema.org", "@type": "ProfessionalService", "name": "Fireball Studios", "url": "https://fireballstudios.co.uk/", "logo": "https://fireballstudios.co.uk/images/logo.png", "email": "mailto:info@fireballstudios.co.uk", "address": {"@type": "PostalAddress", "addressLocality": "London", "addressCountry": "GB"}, "areaServed": ["United Kingdom", "Europe"], "sameAs": ["https://www.linkedin.com/company/fireball-studios-uk/", "https://x.com/Fireball_stud"], "knowsAbout": ["3D architectural visualisation", "Real estate visualisation", "3D automotive visualisation", "Car configurators", "CAD and 3D modelling", "Mechanical design", "FEA", "CFD and thermal analysis", "Product visualisation"]}</script><link rel="icon" type="image/png" href="images/logo.png"></head>
+
+  <link rel="canonical" href="https://fireballstudios.co.uk/">
+
+  <!-- ProfessionalService schema (FAQPage schema removed – no longer supported) -->
+  <script type="application/ld+json" id="business-schema">
+  {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    "@id": "https://fireballstudios.co.uk/#business",
+    "name": "Fireball Studios",
+    "url": "https://fireballstudios.co.uk/",
+    "logo": "https://fireballstudios.co.uk/images/logo.png",
+    "description": "3D visualisation and engineering design studio in London providing architectural, real estate and automotive visualisation, CAD, 3D modelling, FEA, CFD and technical documentation.",
+    "email": "mailto:info@fireballstudios.co.uk",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "London",
+      "addressCountry": "GB"
+    },
+    "areaServed": ["United Kingdom", "Europe"],
+    "sameAs": [
+      "https://www.linkedin.com/company/fireball-studios-uk/",
+      "https://x.com/Fireball_stud"
+    ],
+    "knowsAbout": [
+      "3D architectural visualisation",
+      "Real estate visualisation",
+      "3D automotive visualisation",
+      "Car configurators",
+      "CAD and 3D modelling",
+      "Mechanical design",
+      "FEA",
+      "CFD and thermal analysis",
+      "Product visualisation"
+    ]
+  }
+  </script>
+
+  <link rel="icon" type="image/png" href="images/logo.png">
+</head>
 <body>
 
   <header id="mainHeader" class="main-header">
@@ -186,14 +216,14 @@
     </div>
   </header>
 
-  <!-- HERO: copy sits adjacent to the courtyard house viewer -->
+  <!-- HERO -->
   <section class="hero" id="hero">
     <div class="container hero-grid">
       <div class="hero-content">
-      <h1>
-  3D Visualisation &amp;<br>
-  Engineering Design in <span class="highlight">London</span>
-</h1>
+        <h1>
+          3D Visualisation &amp;<br>
+          Engineering Design in <span class="highlight">London</span>
+        </h1>
         <div class="hero-buttons">
           <a href="contact.html" class="btn-primary">START A PROJECT <i class="fas fa-arrow-right"></i></a>
           <a href="services.html" class="btn-secondary">EXPLORE SERVICES →</a>
@@ -220,7 +250,7 @@
     </div>
   </section>
 
-  <!-- INTRO – centred -->
+  <!-- INTRO -->
   <section class="intro section-pad intro-centered">
     <div class="container intro-grid">
       <div class="intro-label">WHO WE ARE</div>
@@ -361,7 +391,9 @@
       <details><summary>How can I start a project?</summary><p>Send your brief through our enquiry form or email info@fireballstudios.co.uk. Include your goals, desired outputs, target date and any drawings or reference material you can share.</p></details>
     </div>
   </div>
-</section><footer class="footer">
+</section>
+
+  <footer class="footer">
     <div class="container footer-grid">
       <div class="footer-col"><h3>Fireball Studios</h3><p>Bringing Ideas to Life, Virtually</p></div>
       <div class="footer-col"><h4>Navigation</h4><ul><li><a href="services.html">Services</a></li><li><a href="projects.html">Projects</a></li><li><a href="process.html">Process</a></li><li><a href="industries.html">Industries</a></li><li><a href="about.html">About</a></li><li><a href="contact.html">Contact</a></li></ul></div>
