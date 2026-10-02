@@ -1,4 +1,10 @@
 /* ===== RESET & BASE ===== */
+.hero h1 {
+  font-size: clamp(42px, 5vw, 72px);
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+  max-width: 650px;
+}
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 body {
