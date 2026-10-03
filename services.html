@@ -51,7 +51,76 @@
     .services-list .service-grid-2x2 .service-card .arrow-link:hover{
       transform:translateX(6px);
     }
+    /* =========================================================
+       PREMIUM PROCESS STEPS – 5 cards, no arrows
+       ========================================================= */
+    .process-steps{
+      display:grid;
+      grid-template-columns:repeat(5,minmax(0,1fr));
+      gap:20px;
+      margin-top:50px;
+    }
+    .process-step{
+      position:relative;
+      padding:36px 26px 34px;
+      background:#fff;
+      border:1px solid var(--border);
+      border-radius:14px;
+      overflow:hidden;
+      transition:all .4s cubic-bezier(.25,.46,.45,.94);
+    }
+    .process-step::before{
+      content:"";
+      position:absolute;
+      left:0; top:0; bottom:0;
+      width:3px;
+      background:linear-gradient(180deg,var(--secondary),var(--accent));
+      opacity:0;
+      transition:opacity .4s;
+    }
+    .process-step:hover{
+      transform:translateY(-4px);
+      box-shadow:0 12px 40px rgba(11,31,51,.08);
+      border-color:var(--accent);
+    }
+    .process-step:hover::before{
+      opacity:1;
+    }
+    .process-step .step-num{
+      display:block;
+      font-size:2.4rem;
+      font-weight:800;
+      line-height:1;
+      letter-spacing:-0.02em;
+      color:var(--secondary);
+      opacity:.15;
+      margin-bottom:14px;
+    }
+    .process-step h4{
+      font-size:1.05rem;
+      font-weight:700;
+      color:var(--primary);
+      margin:0 0 10px;
+      line-height:1.3;
+    }
+    .process-step p{
+      font-size:.92rem;
+      line-height:1.6;
+      opacity:.72;
+      margin:0;
+      color:var(--text);
+    }
 
+    @media (max-width:1000px){
+      .process-steps{grid-template-columns:repeat(2,minmax(0,1fr));}
+    }
+    @media (max-width:600px){
+      .process-steps{grid-template-columns:1fr;gap:14px;}
+      .process-step{padding:28px 22px;}
+      .process-step .step-num{font-size:2rem;}
+    }
+
+    
     @media (max-width:800px){
       .services-list .service-grid-2x2{
         grid-template-columns:1fr;
@@ -212,7 +281,6 @@
       </div>
     </div>
   </section>
-
   <!-- ============== HOW WE WORK ============== -->
   <section class="section-pad" style="background:#F1F5F9;">
     <div class="container">
@@ -221,17 +289,31 @@
         <h2>A clear process from <span class="highlight">brief to delivery</span></h2>
         <p class="section-desc">Every project follows a structured workflow, with review points that keep you in control.</p>
       </div>
-      <div style="background:#fff;padding:40px;border-radius:12px;border:1px solid var(--border);max-width:1000px;margin:0 auto;">
-        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:16px;text-align:center;align-items:center;">
-          <div><strong style="color:#2563EB;font-size:1.2rem;">01</strong><br><span style="opacity:0.75;font-size:0.95rem;">Brief &amp; source files</span></div>
-          <div style="opacity:0.4;">→</div>
-          <div><strong style="color:#2563EB;font-size:1.2rem;">02</strong><br><span style="opacity:0.75;font-size:0.95rem;">Model &amp; build</span></div>
-          <div style="opacity:0.4;">→</div>
-          <div><strong style="color:#2563EB;font-size:1.2rem;">03</strong><br><span style="opacity:0.75;font-size:0.95rem;">Materials &amp; lighting</span></div>
-          <div style="opacity:0.4;">→</div>
-          <div><strong style="color:#2563EB;font-size:1.2rem;">04</strong><br><span style="opacity:0.75;font-size:0.95rem;">Review &amp; refine</span></div>
-          <div style="opacity:0.4;">→</div>
-          <div><strong style="color:#2563EB;font-size:1.2rem;">05</strong><br><span style="opacity:0.75;font-size:0.95rem;">Deliver</span></div>
+      <div class="process-steps">
+        <div class="process-step">
+          <span class="step-num">01</span>
+          <h4>Brief &amp; source files</h4>
+          <p>Share your goals, drawings and reference material. We confirm scope, deliverables and timelines.</p>
+        </div>
+        <div class="process-step">
+          <span class="step-num">02</span>
+          <h4>Model &amp; build</h4>
+          <p>We build the 3D model from your CAD, sketches or reference files — geometry first, detail next.</p>
+        </div>
+        <div class="process-step">
+          <span class="step-num">03</span>
+          <h4>Materials &amp; lighting</h4>
+          <p>Materials, lighting and camera angles are applied to match your project's tone and audience.</p>
+        </div>
+        <div class="process-step">
+          <span class="step-num">04</span>
+          <h4>Review &amp; refine</h4>
+          <p>You review the outputs, we refine. Feedback rounds are structured to keep the project moving.</p>
+        </div>
+        <div class="process-step">
+          <span class="step-num">05</span>
+          <h4>Deliver</h4>
+          <p>Final stills, animations or interactive files delivered in the formats you need — ready to use.</p>
         </div>
       </div>
     </div>
