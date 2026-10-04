@@ -213,9 +213,19 @@
         grid-template-columns: 1fr;
         margin-bottom: 34px;
       }
+      /* Taller media on phones so interactive viewers and their UI panels fit */
       .project-media{
-        aspect-ratio: 4 / 3;
+        aspect-ratio: 3 / 4;
+        min-height: 560px;
         border-radius: 10px;
+      }
+      .project-media--image{
+        aspect-ratio: auto;
+        min-height: 0;
+      }
+      .project-media--image img{
+        height: auto;
+        object-fit: contain;
       }
       .projects-cta{
         padding: 60px 22px;
