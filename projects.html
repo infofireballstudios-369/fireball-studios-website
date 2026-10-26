@@ -165,28 +165,6 @@
       box-shadow: 0 12px 24px rgba(0,0,0,0.1);
     }
 
-    /* Services used chips */
-    .services-used{
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 26px;
-    }
-    .services-used a{
-      display: inline-flex;
-      padding: 7px 14px;
-      border-radius: 999px;
-      background: rgba(37, 99, 235, 0.08);
-      color: #2563EB;
-      font-size: 0.8rem;
-      font-weight: 600;
-      transition: background 0.3s;
-    }
-    .services-used a:hover{
-      background: rgba(37, 99, 235, 0.16);
-    }
-
     /* Final CTA block */
     .projects-cta{
       background: #0B1F33;
@@ -222,8 +200,9 @@
     /* Divider for old projects */
     .section-divider {
       text-align: center;
-      margin: 0px 0 60px;
-      padding-top: 40px;
+      margin: 100px 0 60px;
+      border-top: 1px solid #E2E8F0;
+      padding-top: 60px;
     }
     .section-divider h2 {
       font-size: 2rem;
@@ -278,8 +257,8 @@
         border-radius: 14px;
       }
       .section-divider {
-        margin: 20px 0 40px;
-        padding-top: 20px;
+        margin: 60px 0 40px;
+        padding-top: 40px;
       }
     }
   </style>
@@ -341,7 +320,7 @@
   </header>
 
   <!-- ============== HERO ============== -->
-  <section class="page-hero section-pad" style="padding-top:140px; padding-bottom:60px; background:#F1F5F9;">
+  <section class="page-hero section-pad" style="padding-top:140px; padding-bottom:20px; background:#F1F5F9;">
     <div class="container">
       <span class="section-tag">PORTFOLIO</span>
       <h1>Selected Projects &amp; Visualisations</h1>
@@ -349,9 +328,9 @@
     </div>
   </section>
 
-  <!-- ============== MOVED DIVIDER (Now above the 1st project) ============== -->
+  <!-- ============== TOP BANNER ============== -->
   <div class="container">
-    <div class="section-divider">
+    <div class="section-divider" style="border-top: none; margin: 20px 0 60px; padding-top: 20px;">
       <span class="section-tag">INTERACTIVE</span>
       <h2>Interactive 3D Experiences &amp; Case Studies</h2>
       <p style="color: #64748B; margin-top: 10px;">Explore our browser-based configurators and technical analysis.</p>
@@ -365,13 +344,11 @@
       <!-- NEW PROJECT 01 -->
       <article class="project-item" id="project-1">
         <div class="project-meta">
-          <span class="project-type">AUTOMOTIVE</span>
+          <span class="project-type">3D VISUALISATION</span>
           <span class="project-number">01</span>
         </div>
-        <!-- SEO Optimized Title -->
-        <h2>High-Fidelity Automotive Visualisation for Premium Tuners</h2>
-        <!-- Creative 2-line Description -->
-        <p class="project-lead">An immersive 3D render and animation showcase designed to elevate vehicle marketing. We combine photorealistic materials with dynamic lighting to bring high-performance engineering to life.</p>
+        <h2>Modern Open-Plan Kitchen and Living Room Interior Design</h2>
+        <p class="project-lead">Explore a sleek, contemporary open-plan kitchen and living space featuring dark cabinetry, ambient under-cabinet lighting, and a cozy green sofa setup. Perfect for modern home renovation inspiration and maximizing style in compact layouts.</p>
 
         <!-- VIDEO -->
         <div class="project-media">
@@ -385,11 +362,6 @@
           <img src="images/1.3.webp" alt="Project 1 Render 3" loading="lazy" onclick="window.open(this.src, '_blank')">
           <img src="images/1.4.webp" alt="Project 1 Render 4" loading="lazy" onclick="window.open(this.src, '_blank')">
         </div>
-
-        <div class="services-used">
-          <a href="services.html">3D Visualisation</a>
-          <a href="services.html">3D Animation</a>
-        </div>
       </article>
 
       <!-- NEW PROJECT 02 -->
@@ -398,10 +370,8 @@
           <span class="project-type">ARCHITECTURE</span>
           <span class="project-number">02</span>
         </div>
-        <!-- SEO Optimized Title -->
-        <h2>Cinematic Architectural Visualisation for London Developments</h2>
-        <!-- Creative 2-line Description -->
-        <p class="project-lead">Transforming architectural plans into breathtaking, photorealistic 3D animations. This project helps developers and estate agents sell off-plan properties with absolute confidence.</p>
+        <h2>Contemporary Living Room with Green Sofa and Minimalist Decor</h2>
+        <p class="project-lead">Discover a stylish, calming living room design centered around an olive green sofa, accented with floral arrangements, modern artwork, and sleek console tables. Transform your space with these elegant and balanced interior design ideas.</p>
 
         <!-- VIDEO -->
         <div class="project-media">
@@ -415,11 +385,6 @@
           <img src="images/2.3.webp" alt="Project 2 Render 3" loading="lazy" onclick="window.open(this.src, '_blank')">
           <img src="images/2.4.webp" alt="Project 2 Render 4" loading="lazy" onclick="window.open(this.src, '_blank')">
         </div>
-
-        <div class="services-used">
-          <a href="services.html">Architectural Visualisation</a>
-          <a href="services.html">3D Rendering</a>
-        </div>
       </article>
 
       <!-- NEW PROJECT 03 -->
@@ -428,10 +393,8 @@
           <span class="project-type">PRODUCT DESIGN</span>
           <span class="project-number">03</span>
         </div>
-        <!-- SEO Optimized Title -->
-        <h2>Advanced Product Design &amp; 3D Rendering for Concept Visualisation</h2>
-        <!-- Creative 2-line Description -->
-        <p class="project-lead">Bringing innovative product concepts to market-ready visuals through precise 3D modeling. We deliver hyper-realistic renders and animations that communicate complex design features instantly.</p>
+        <h2>Interactive 3D Interior Design Tool and Living Room Rendering</h2>
+        <p class="project-lead">Experience cutting-edge interior visualization with a real-time 3D room customizer, featuring a spacious living and dining area layout. Ideal for homeowners and designers looking to plan and preview custom home decor effortlessly.</p>
 
         <!-- VIDEO -->
         <div class="project-media">
@@ -445,11 +408,6 @@
           <img src="images/3.3.webp" alt="Project 3 Render 3" loading="lazy" onclick="window.open(this.src, '_blank')">
           <img src="images/3.4.webp" alt="Project 3 Render 4" loading="lazy" onclick="window.open(this.src, '_blank')">
         </div>
-
-        <div class="services-used">
-          <a href="services.html">Product Visualisation</a>
-          <a href="services.html">CAD Modelling</a>
-        </div>
       </article>
 
       <!-- NEW PROJECT 04 -->
@@ -458,10 +416,8 @@
           <span class="project-type">ENGINEERING</span>
           <span class="project-number">04</span>
         </div>
-        <!-- SEO Optimized Title -->
-        <h2>Data-Driven CFD Engineering Visualisation &amp; Analysis</h2>
-        <!-- Creative 2-line Description -->
-        <p class="project-lead">Visualising complex fluid dynamics and thermal gradients for advanced engineering projects. We turn raw simulation data into clear, compelling visual narratives for stakeholders.</p>
+        <h2>Modern Minimalist Bedroom Design with Neutral Earth Tones</h2>
+        <p class="project-lead">Create a serene retreat with this minimalist bedroom design featuring a platform bed, warm earth tones, and soft floor-to-ceiling sheer curtains. Elevate your master bedroom with clean lines, ambient bedside lighting, and understated elegance.</p>
 
         <!-- VIDEO -->
         <div class="project-media">
@@ -475,18 +431,13 @@
           <img src="images/4.3.webp" alt="Project 4 Render 3" loading="lazy" onclick="window.open(this.src, '_blank')">
           <img src="images/4.4.webp" alt="Project 4 Render 4" loading="lazy" onclick="window.open(this.src, '_blank')">
         </div>
-
-        <div class="services-used">
-          <a href="services.html">CFD Analysis</a>
-          <a href="services.html">Engineering Visualisation</a>
-        </div>
       </article>
 
     </div>
   </section>
 
   <!-- ============== OLD EXISTING PROJECTS ============== -->
-  <section class="projects-list" style="padding-bottom: 100px;">
+  <section class="projects-list" style="padding-bottom: 100px; border-top: 1px solid #E2E8F0; padding-top: 80px;">
     <div class="container">
 
       <!-- 01 — Automotive Configurator -->
@@ -519,12 +470,6 @@
 
         <div class="project-media">
           <iframe src="fireball-car-configurator2.html" title="Interactive 3D car configurator by Fireball Studios" loading="lazy" allow="fullscreen" allowfullscreen=""></iframe>
-        </div>
-
-        <div class="services-used">
-          <a href="services.html">3D Automotive Visualisation</a>
-          <a href="services.html">Interactive 3D</a>
-          <a href="services.html">CAD &amp; 3D Modelling</a>
         </div>
       </article>
 
@@ -559,11 +504,6 @@
         <div class="project-media">
           <iframe src="courtyard-house5.html" title="Interactive 3D courtyard house visualisation" loading="lazy" allow="fullscreen" allowfullscreen=""></iframe>
         </div>
-
-        <div class="services-used">
-          <a href="services.html">3D Architectural Visualisation</a>
-          <a href="services.html">Interactive 3D Tours</a>
-        </div>
       </article>
 
       <!-- 03 — Glass Sculpture -->
@@ -597,12 +537,6 @@
         <div class="project-media">
           <iframe src="glass-sculpture-11-selected.html" title="Interactive 3D glass sculpture" loading="lazy" allow="fullscreen" allowfullscreen=""></iframe>
         </div>
-
-        <div class="services-used">
-          <a href="services.html">Product Visualisation</a>
-          <a href="services.html">Interactive 3D</a>
-          <a href="services.html">Prototyping Support</a>
-        </div>
       </article>
 
       <!-- 04 — CFD Heat Exchanger Study -->
@@ -635,12 +569,6 @@
 
         <div class="project-media project-media--image">
           <img src="images/Cross-tube-heat-exchanger.webp" alt="ANSYS temperature contour plot showing heat transfer through a cross twisted tape heat exchanger" width="1142" height="536" loading="lazy" decoding="async">
-        </div>
-
-        <div class="services-used">
-          <a href="services.html">CFD Analysis</a>
-          <a href="services.html">CAD &amp; 3D Modelling</a>
-          <a href="services.html">Professional Documentation</a>
         </div>
       </article>
 
