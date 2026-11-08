@@ -15,7 +15,7 @@
 
 `npm run type-check`, `npm run lint`, all **103 tests**, `npm run check:media-budget` and the **Next.js 16.4.5 production build** pass. The full dependency audit reports **zero known vulnerabilities**, including development dependencies. ESLint's current compatibility/support constraint is recorded in the security guide.
 
-Local production HTTP checks pass for **18 pages, 20 internal link targets, 39 anchors, 29 rendered image URLs, 12 atlas files, 18 sitemap entries and 65 JSON-LD blocks**. Initial HTML contains no media iframe or local video player. The residence has exactly two gallery figures. Image optimisation, immutable atlas headers, the isolated viewer's framing/WASM policy, compact form, legacy redirects, genuine missing pages and API rejection/unavailable responses pass.
+Local production HTTP checks pass for **18 pages, 20 internal link targets, 39 anchors, 29 rendered image URLs, 12 atlas files, 18 sitemap entries and 65 JSON-LD blocks**. The same full page/link/anchor/image/atlas checks also pass on the public Netlify preview; its sitemap is correctly empty, and the successful remote pass needed no transport retries. Initial HTML contains no media iframe or local video player. The residence has exactly two gallery figures. Image optimisation, immutable atlas headers, the isolated viewer's framing/WASM policy, compact form, legacy redirects, genuine missing pages and API rejection/unavailable responses pass.
 
 The native Netlify build/deploy succeeds with adapter `@netlify/plugin-nextjs@5.16.6`. Its generated function manifest assigns `/api/contact` POST to the native function at priority 10, ahead of the priority-0 OpenNext catch-all. The manifest contains the two-per-IP/domain/180-second sliding-window rule.
 
@@ -38,7 +38,7 @@ Browser access is unavailable. Desktop/mobile appearance, actual keyboard intera
 
 No Resend account, verified sender or email credentials are configured. No real enquiry was sent. Add `RESEND_API_KEY` and `CONTACT_FROM_EMAIL` securely in Netlify, verify the sending domain, then check provider acceptance **and** actual receipt/reply-to at info@fireballstudios.co.uk. A missing setup returns an honest unavailable state and an email fallback.
 
-Netlify custom-path handling, delayed rate enforcement and default-function bypass rejection have been checked. The viewer response uses Brotli compression. The static-file header fix needs its final deployed check; Google event delivery and browser interaction remain unverified. GA4 tests use mocks; the owner's Enhanced Measurement confirmation is not a browser event-delivery test.
+Netlify custom-path handling, delayed rate enforcement and default-function bypass rejection have been checked. The viewer response uses Brotli compression. The static viewer’s deployed CSP, SAMEORIGIN framing, noindex and Brotli transfer are verified: 2,466,700 bytes transferred. Google event delivery and browser interaction remain unverified. GA4 tests use mocks; the owner's Enhanced Measurement confirmation is not a browser event-delivery test.
 
 The existing domain still points to the old site. Netlify GitHub App repository permission, an approved source merge, production deployment, verified email and project-specific 123 Reg DNS changes remain part of the launch procedure. Preserve mailbox MX/TXT records and rollback values.
 

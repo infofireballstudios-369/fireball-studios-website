@@ -46,7 +46,7 @@ Use Netlify’s billing data for the hosting budget and Resend’s dashboard for
 
 Keep administration protected with multi-factor authentication, use a sending-only mail key, store credentials in server settings, avoid logging enquiry bodies and review dependency updates. CI checks types, lint, regression tests, the npm audit and the production build. The targeted minimatch override addresses GHSA-g3hv-75wg-m249 and should be removed once its upstream dependency adopts a safe range; pinned external viewer modules need review separately from npm’s dependency audit.
 
-Deployed Netlify routing/rate rules, real enquiry receipt/replies, GA4 account settings and live consent events still require verification. Browser/mobile and WebGL appearance also need review. Follow the [publishing guide](EMAIL_AND_PUBLISHING.md), preserve existing mailbox MX records during any DNS change, and record actual evidence in [review results](REVIEW_RESULTS.md).
+Netlify native routing, default-function URL rejection and platform HTTP 429 enforcement have been verified on the public preview. Its static viewer now receives the intended isolated CSP, SAMEORIGIN framing and noindex. Real enquiry receipt/replies, remaining GA4 account settings and live consent events still require verification. Browser/mobile and WebGL appearance also need review. Follow the [publishing guide](EMAIL_AND_PUBLISHING.md), preserve existing mailbox MX records during any DNS change, and record actual evidence in [review results](REVIEW_RESULTS.md).
 
 ## Development tooling
 

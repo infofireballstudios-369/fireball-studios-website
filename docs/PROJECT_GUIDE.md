@@ -52,7 +52,7 @@ Use `SiteLink` for internal links. An explicit prefetch override should be a del
 | `src/lib/contactResponse.ts` | Client success acknowledgement and empty platform rate-limit responses |
 | `.env.example` | Setting names; actual credentials belong in ignored local files or host settings |
 
-Netlify uses a declared platform rule, not a per-instance memory counter. Its deployed routing and rate enforcement still need verification. Keep the generic Next.js fallback closed in production without its own protection. Never enable its memory option on serverless hosting. See the [security notes](SECURITY_AND_SCALE.md) for the different policies and limits.
+Netlify uses a declared platform rule, not a per-instance memory counter. Routing and platform HTTP 429 enforcement were verified on the public preview; recheck them after deployment changes. Keep the generic Next.js fallback closed in production without its own protection. Never enable its memory option on serverless hosting. See the [security notes](SECURITY_AND_SCALE.md) for the different policies and limits.
 
 ## Analytics
 

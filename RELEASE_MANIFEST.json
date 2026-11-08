@@ -1,5 +1,5 @@
 {
-  "sourceCommit": "2e01cb87801466f0b27e17ea00198d4062537314",
+  "sourceCommit": "9563d9d7bc4abc15c9963bcebabe4765f02790f9",
   "sourceBranch": "codex/vimeo-portfolio-refresh",
   "files": [
     {
@@ -59,18 +59,18 @@
     },
     {
       "path": "docs/PROJECT_GUIDE.md",
-      "bytes": 7516,
-      "sha256": "4a5719d2fc7bdd92489cc087c246506795fdc488230f383ce09385926c84549d"
+      "bytes": 7567,
+      "sha256": "c76b50133561ea6712281de847df86b2c9f014f220fa3484ecb10e68debe5d92"
     },
     {
       "path": "docs/REVIEW_RESULTS.md",
-      "bytes": 5837,
-      "sha256": "9b27afb85e32674ac4207594a52d6304d8ee7376e0cc4b780303a9131823c3f9"
+      "bytes": 6088,
+      "sha256": "07cb5182e228a08bb6bb7d360f4ce5a8898f6fa25f7b9874c466b74d0a68eeb1"
     },
     {
       "path": "docs/SECURITY_AND_SCALE.md",
-      "bytes": 8554,
-      "sha256": "ec9744b0a03f24595e6f7b115cef946b4cb4b1472cb5214d98581738b513e602"
+      "bytes": 8748,
+      "sha256": "dfa427dc051d45e8f821a856328a60163fd003b734b42f36e8ccbaa5187fd3a5"
     },
     {
       "path": "docs/SEO_GUIDE.md",
