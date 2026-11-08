@@ -3,7 +3,7 @@ import { test } from "node:test";
 
 test("release packaging excludes local credentials, metadata and archived media", async () => {
   const { includeInRelease } = await import("../scripts/export-release.mjs");
-  for (const path of [".env", ".env.local", ".env.production", ".aws/credentials", ".git/config", ".vercel/auth.json", ".netlify/state.json", "private.key", "certificate.pem", "public/videos/4.mp4", "public/previews/1.mp4", "public/motion/1/1.1.webp"]) {
+  for (const path of [".env", ".env.local", ".env.production", ".aws/credentials", ".git/config", ".vercel/auth.json", ".netlify/state.json", "public/_headers", "private.key", "certificate.pem", "public/videos/4.mp4", "public/previews/1.mp4", "public/motion/1/1.1.webp"]) {
     assert.equal(includeInRelease(path), false, path);
   }
 });

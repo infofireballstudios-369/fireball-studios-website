@@ -32,4 +32,4 @@ jobs:
       - run: npm test
       - run: npm run check:media-budget
       - run: npm audit --audit-level=moderate
-      - run: npm run build
+      - run: npm run build:netlify

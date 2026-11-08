@@ -39,7 +39,7 @@ The selected stack is the existing GitHub repository, Netlify Free, Resend Free 
 
 Netlify Free has a hard usage cap: the site can pause when its credits run out. Fewer than 5,000 visitors does not guarantee uninterrupted free hosting. Page views, data transferred, 3D launches, functions and production deploys also count. See the budget guide before enabling higher-resolution media or increasing deployment frequency. Draft deploys have no production-deploy credit charge; their traffic still counts.
 
-`netlify.toml` configures Next.js, the native contact function and non-indexable previews. GitHub Pages cannot run this app's email endpoint. Keep the existing domain and Pages site intact until the Netlify preview and email delivery have been reviewed. Follow the publishing guide for Git integration and the 123 Reg DNS cutover.
+`netlify.toml` configures Next.js, the native contact function and non-indexable previews. Netlify uses `npm run build:netlify`, which generates static security headers from the same policy as Next.js, then runs the normal build. GitHub Pages cannot run this app's email endpoint. Keep the existing domain and Pages site intact until the Netlify preview and email delivery have been reviewed. Follow the publishing guide for Git integration and the 123 Reg DNS cutover.
 
 ## Content and routes
 

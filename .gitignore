@@ -37,6 +37,7 @@ yarn-error.log*
 # local hosting state
 .vercel
 /.netlify/
+/public/_headers
 
 # typescript
 *.tsbuildinfo

@@ -5,9 +5,9 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import { ArrowRight, Check, Send, ShieldCheck } from "lucide-react";
 import { contactSchema, type ContactPayload } from "@/lib/contactSchema";
 import { contactEmail } from "@/lib/site";
+import { deliveryError, readEnquiryAcknowledgement } from "@/lib/contactResponse";
 
 const emptyEnquiry: ContactPayload = { name: "", phone: "", email: "", message: "", website: "" };
-const deliveryError = "We couldn’t send your enquiry. Your details are still here; please try again or use email.";
 
 export function ContactForm() {
   const [data, setData] = useState<ContactPayload>(emptyEnquiry);
@@ -52,12 +52,7 @@ export function ContactForm() {
     setStatus("idle");
     try {
       const response = await fetch("/api/contact", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(parsed.data), signal: AbortSignal.any([controller.signal, AbortSignal.timeout(20000)]) });
-      let result: unknown;
-      try { result = await response.json(); } catch { throw new Error(deliveryError); }
-      if (!result || typeof result !== "object" || !("ok" in result) || result.ok !== true || !response.ok) {
-        const message = result && typeof result === "object" && "message" in result && typeof result.message === "string" ? result.message : deliveryError;
-        throw new Error(message);
-      }
+      await readEnquiryAcknowledgement(response);
       if (!mountedRef.current) return;
       setStatus("sent");
       setNotice("Your enquiry has been accepted for delivery to the studio. We’ll use the details you provided to respond.");

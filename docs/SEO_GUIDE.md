@@ -70,7 +70,9 @@ The following environments use noindex and nofollow metadata:
 
 An ordinary self-hosted build without those flags remains indexable. Set deployment variables before building and rebuild when changing them, because pages are pre-rendered. Preview sitemaps are empty and do not advertise a sitemap in robots.txt.
 
-Robots.txt permits crawling of pages so crawlers can read noindex; it excludes the API path. The deployment also needs the same preview rule in an X-Robots-Tag response header to cover standalone HTML assets outside the App Router. Check the deployed headers after the Netlify build. Noindex is an indexing instruction, not access control; do not put confidential material on a public preview. [Google noindex guidance](https://developers.google.com/search/docs/crawling-indexing/block-indexing).
+Robots.txt permits crawling of pages so crawlers can read noindex; it excludes the API path. Netlify builds use **`npm run build:netlify`**: `scripts/prepare-netlify-headers.mts` generates the ignored `public/_headers` from the shared security policy before the Next.js build. This applies the intended CSP and preview X-Robots-Tag to static HTML, including the standalone car viewer, whose Netlify response bypassed Next.js header rules. Check these deployed headers after rebuilding. Noindex is an indexing instruction, not access control; do not put confidential material on a public preview. [Google noindex guidance](https://developers.google.com/search/docs/crawling-indexing/block-indexing).
+
+The [public review preview](https://review--fireball-studios-web.netlify.app) has been checked: its HTML is noindex, analytics is disabled and its sitemap is empty. The owner has set both Production and Deploy Preview visibility to Public. No production deployment has been published, and the existing domain still serves the old site. Preview visibility does not require another login or settings change.
 
 Netlify's `DEPLOY_PRIME_URL` identifies the primary URL for a particular deployment; it must not replace the public canonical origin. Production Fireball URLs remain canonical even when a build is viewed through a temporary Netlify address. Preview analytics stays off. A trusted preview enquiry test needs an exact `CONTACT_SITE_ORIGIN`; do not grant access to every Netlify hostname or give email secrets to untrusted pull requests. See [EMAIL_AND_PUBLISHING.md](EMAIL_AND_PUBLISHING.md) for deployment context and email setup. [Netlify build variables](https://docs.netlify.com/build/configure-builds/environment-variables/).
 
@@ -88,7 +90,7 @@ Run the local checks after changes:
 
     npm run type-check
     node --import tsx --test tests/seo.test.ts tests/analytics.test.ts
-    npm run build
+    npm run build:netlify
 
 The SEO tests cover route coverage, topic entries, canonical URLs, social metadata, preview rules, breadcrumbs, structured data and sitemap consistency. Review the built HTML for a representative page in each section: title, description, canonical, robots, Open Graph, Twitter and visible content.
 
@@ -114,4 +116,4 @@ After authorised production activation, check browser Network requests before an
 
 GA4 reports cover consenting visitors whose browsers allow the tag; they are not a complete count of website traffic and cannot estimate remaining Netlify credits. Use Netlify's usage dashboard for hosting capacity, Search Console/Bing for search visibility, and GA4 for consented on-site behaviour. The existing domain, `main` branch and live tracking are not changed merely by preparing these files.
 
-Current status: the owner confirmed Enhanced Measurement is off on 8 November 2026. Production configuration now enables the existing ID in `netlify.toml`; preview configuration remains false. Live-domain consent, event delivery and the remaining GA4 account settings still need verification after the authorised cutover.
+Current status: the owner confirmed Enhanced Measurement is off on 8 November 2026. Production configuration enables the existing ID in `netlify.toml`; preview configuration remains false, as verified in the publicly accessible review HTML. Production publication, the approved merge and domain cutover are still outstanding. Live-domain consent, event delivery and the remaining GA4 account settings need verification at that authorised launch.

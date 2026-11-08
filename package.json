@@ -7,6 +7,7 @@
     "test": "node --import tsx --test tests/*.test.ts",
     "dev": "next dev --webpack",
     "build": "next build --webpack",
+    "build:netlify": "node --import tsx scripts/prepare-netlify-headers.mts && npm run build",
     "start": "next start",
     "lint": "eslint",
     "check:media-budget": "node scripts/check-media-budget.mjs"

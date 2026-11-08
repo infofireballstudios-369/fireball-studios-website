@@ -17,7 +17,8 @@ All paths are relative to the project folder. Start with this guide, then use [p
 | Studio email and telephone | `src/lib/site.ts` |
 | Enquiry fields and validation | `src/components/ui/ContactForm.tsx`, `src/lib/contactSchema.ts` |
 | Analytics settings and consent behaviour | `src/lib/analytics.ts`, `src/components/ui/AnalyticsConsent.tsx` |
-| Hosting build, preview settings and atlas caching | `netlify.toml` |
+| Hosting build and preview settings | `netlify.toml` |
+| Shared page/static security policy | `src/lib/securityHeaders.ts`, `scripts/prepare-netlify-headers.mts` |
 
 ## Pages and shared interface
 
@@ -48,6 +49,7 @@ Use `SiteLink` for internal links. An explicit prefetch override should be a del
 | `src/lib/server/contactHandler.ts` | Shared origin/body validation, fixed studio recipient and Resend delivery |
 | `src/lib/server/rateLimit.ts` | Optional Redis protection for other hosts; bounded memory is development/single-server only |
 | `src/lib/server/http.ts` | Provider response limits, cancellation and deadlines |
+| `src/lib/contactResponse.ts` | Client success acknowledgement and empty platform rate-limit responses |
 | `.env.example` | Setting names; actual credentials belong in ignored local files or host settings |
 
 Netlify uses a declared platform rule, not a per-instance memory counter. Its deployed routing and rate enforcement still need verification. Keep the generic Next.js fallback closed in production without its own protection. Never enable its memory option on serverless hosting. See the [security notes](SECURITY_AND_SCALE.md) for the different policies and limits.
