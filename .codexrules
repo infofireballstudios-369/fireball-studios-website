@@ -1,0 +1,19 @@
+# Fireball Studios project rules
+
+- Write public-facing copy and code comments in standard UK English: visualisation, optimisation, colour.
+- Use pre-rendered WebP frame sequences with GSAP ScrollTrigger for scroll scrubbing. Do not scrub video playback for sequences with WebP frames.
+- Keep headlines, service copy, FAQ answers and metadata in semantic, crawlable HTML above canvas or image containers.
+- Keep sequence frame counts aligned with files in `public/frames/<id>/`. The first frame is numbered 1.
+- Keep the home sequences 3, 6 and 5 in `public/frames/<id>/` with counts in `sequenceConfigs`. Preserve original sparse stills in `public/gallery/` and all original videos. Archived earlier sequences in `public/motion/` are not deployed.
+- Respect reduced-motion preferences, retain semantic content without JavaScript, and bound the decoded image cache.
+- Add only verified business facts to structured data. Do not invent a street address, telephone number, opening hours or customer claims.
+
+- Focus public copy on 3D visualisation for real estate, automotive, furniture, products and creative concepts. Do not claim technical design services, academic qualifications or guaranteed start times.
+
+- Use Vimeo for ordinary film playback; keep the home canvas sequence order 3 → 6 → 5. Preserve local originals for media generation.
+- Keep source asset IDs distinct from portfolio IDs. Home featured sources are 3 and 5; source 6 belongs to the spaceship concept article and home story, not the Projects portfolio.
+- Load Vimeo iframes and the car configurator only after explicit visitor interaction. Keep model credits and isolate configurator scripts.
+- The contact form has name, phone, email and description fields. Server delivery always targets info@fireballstudios.co.uk. Never claim delivery success without provider acceptance.
+
+- Keep Interactive Residence gallery and cover restricted to genuine 3.4/3.5 stills, with the Vimeo film available on Home and Projects.
+- Keep small interface text readable; form inputs use at least 16px. Share project gallery data and film-dialog behaviour instead of duplicating implementations.

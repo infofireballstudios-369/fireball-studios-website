@@ -1,0 +1,9 @@
+.git
+node_modules
+.next
+.env*
+!.env.example
+public/videos
+public/previews
+public/motion
+*.tsbuildinfo
