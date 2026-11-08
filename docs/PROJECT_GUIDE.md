@@ -1,99 +1,84 @@
 # Fireball Studios: where to find things
 
-Start here when reviewing or editing the website. All paths below are relative to the project folder.
+All paths are relative to the project folder. Start with this guide, then use [publishing and email setup](EMAIL_AND_PUBLISHING.md), [security and scale](SECURITY_AND_SCALE.md), or the latest [review results](REVIEW_RESULTS.md).
 
 ## Common changes
 
-| I want to change… | Open this file |
+| Change | File |
 | --- | --- |
-| Project titles, categories, descriptions, photos or film assignments | `src/lib/projectsData.ts` |
-| Interactive Residence photos | Its entry in `src/lib/projectsData.ts`; it uses only `3.4.webp` and `3.5.webp` |
-| Homepage scroll headlines and descriptions | `src/lib/homeStory.ts` |
-| Homepage scroll order or frame counts | `src/lib/assetManifest.ts` |
-| Vimeo video IDs | `videoManifest` in `src/lib/assetManifest.ts` |
-| Service descriptions and industry-to-project links | `src/lib/industriesData.ts` |
-| Blog titles, article text and film assignments | `src/lib/blogData.ts` |
-| Frequently asked questions | `src/lib/faqs.ts` |
-| Search titles, descriptions and topic/keyword planning | `src/lib/seo.ts` and [SEO guide](SEO_GUIDE.md) |
-| Colours, type sizes, spacing and mobile layouts | `src/app/globals.css` |
-| Email address and telephone links | `src/lib/site.ts` |
-| Enquiry form fields and messages | `src/components/ui/ContactForm.tsx` |
-| Domain authentication and publishing | [Email and publishing guide](EMAIL_AND_PUBLISHING.md) |
-| Security controls and scaling limits | [Security and scale notes](SECURITY_AND_SCALE.md) |
-| Latest checks and outstanding external setup | [Review results](REVIEW_RESULTS.md) |
+| Project titles, categories, photos and film assignments | `src/lib/projectsData.ts` |
+| Interactive Residence gallery | Its manifest entry: only `3.4.webp` and `3.5.webp` |
+| Homepage headlines and chapter copy | `src/lib/homeStory.ts` |
+| Vimeo IDs, source frame counts and home order `3 → 6 → 5` | `src/lib/assetManifest.ts` |
+| Service descriptions and related projects | `src/lib/industriesData.ts` |
+| Articles and FAQs | `src/lib/blogData.ts`, `src/lib/faqs.ts` |
+| Search titles, descriptions and editorial topics | `src/lib/seo.ts`; see [SEO guide](SEO_GUIDE.md) |
+| Colours, typography, spacing and responsive layouts | `src/app/globals.css` |
+| Studio email and telephone | `src/lib/site.ts` |
+| Enquiry fields and validation | `src/components/ui/ContactForm.tsx`, `src/lib/contactSchema.ts` |
+| Analytics settings and consent behaviour | `src/lib/analytics.ts`, `src/components/ui/AnalyticsConsent.tsx` |
+| Hosting build, preview settings and atlas caching | `netlify.toml` |
 
-## Pages
+## Pages and shared interface
 
-| File | What it contains |
+`src/app/layout.tsx` supplies fonts, navigation, footer, default metadata, business schema and the analytics consent integration. Each named folder under `src/app/` contains its page. The reusable project and article templates live at `projects/[slug]/page.tsx` and `blog/[slug]/page.tsx`; add manifest entries instead of copying page implementations. `sitemap.ts` and `robots.ts` use the central SEO map.
+
+Shared components live in `src/components/ui/`:
+
+| Component | Responsibility |
 | --- | --- |
-| `src/app/layout.tsx` | Shared fonts, navigation, footer, default metadata and business schema |
-| `src/app/page.tsx` | Homepage section assembly |
-| `src/app/projects/page.tsx` | Projects hub |
-| `src/app/projects/[slug]/page.tsx` | One reusable template for every project |
-| `src/app/industries/page.tsx` | Industry sections and related projects |
-| `src/app/about/page.tsx` | Studio approach and process |
-| `src/app/blog/page.tsx` | Searchable article hub |
-| `src/app/blog/[slug]/page.tsx` | One reusable article template |
-| `src/app/contact/page.tsx` | Contact details and the enquiry form |
-| `src/app/privacy/page.tsx`, `src/app/terms/page.tsx` | Website notices |
-| `src/app/not-found.tsx` | Missing-page screen |
-| `src/app/sitemap.ts`, `src/app/robots.ts` | Search discovery, derived from the central SEO map |
+| `SiteLink.tsx` | Internal navigation with route prefetch disabled by default, reducing unused requests |
+| `Navbar.tsx`, `Footer.tsx`, `Brand.tsx` | Navigation, contact links and branding |
+| `PageHeader.tsx`, `JsonLd.tsx` | Banners, breadcrumbs, shared CTA and safe schema output |
+| `FeaturedProjects.tsx`, `ProjectsGrid.tsx` | Featured cards and portfolio filters using the project manifest |
+| `ProjectFilmDialog.tsx`, `VimeoPlayer.tsx` | Films load only after a play action |
+| `ConfiguratorPlayer.tsx` | Explicit launch, isolated viewer messages, loading/errors and cleanup |
+| `AnalyticsConsent.tsx` | Accept/reject controls and the footer preference control |
+| `ServicesOverlay.tsx`, `ProcessOverlay.tsx`, `FaqSection.tsx` | Services, the six-step process and FAQs |
 
-To add a project, add its entry and real assets to the manifest. To add an article, add it to the blog manifest and add its editorial topic entry in `seo.ts`. The dynamic templates, sitemap and metadata use those entries. No copy-and-paste page template is needed.
+Use `SiteLink` for internal links. An explicit prefetch override should be a deliberate budget decision. Portfolio film numbers are independent of project IDs; source 6 is the spaceship concept for the home story and blog, not a portfolio entry.
 
-## Shared interface and animation
+## Contact: two entry points
 
 | File | Responsibility |
 | --- | --- |
-| `Navbar.tsx`, `Footer.tsx`, `Brand.tsx` in `src/components/ui/` | Shared navigation, contact links and branding |
-| `PageHeader.tsx` | Page banner, visible breadcrumbs, breadcrumb schema and shared contact banner |
-| `FeaturedProjects.tsx`, `ProjectsGrid.tsx` | Homepage cards and filtered portfolio; both use the same gallery data |
-| `ProjectFilmDialog.tsx`, `VimeoPlayer.tsx` | Shared film dialog and player; Vimeo loads only after a play action |
-| `ConfiguratorPlayer.tsx` | Deferred automotive viewer and isolated lifecycle messages |
-| `BlogSearch.tsx` | Article search and filters |
-| `ServicesOverlay.tsx`, `ProcessOverlay.tsx`, `FaqSection.tsx` | Reusable services, six-step process and FAQ sections |
-| `JsonLd.tsx` | Safe structured-data output |
-| `scroll/SequenceStory.tsx` | Three-chapter scroll controller |
-| `scroll/SequencePlayer.tsx` | Reusable single-sequence player and story entry point |
-| `src/lib/frameStore.ts` | Progressive fetching, request deadlines, decoding limits and image disposal |
-| `src/types/portfolio.ts` | Shared project model |
+| `netlify/functions/contact.mts` | Configured Netlify Free `/api/contact` entry point and native path rate rule |
+| `src/lib/server/netlifyContact.ts` | Native wrapper, trusted platform context, explicit preview origins and API security headers |
+| `src/app/api/contact/route.ts` | Generic Next.js/local endpoint; production fallback requires shared rate protection |
+| `src/lib/server/contactHandler.ts` | Shared origin/body validation, fixed studio recipient and Resend delivery |
+| `src/lib/server/rateLimit.ts` | Optional Redis protection for other hosts; bounded memory is development/single-server only |
+| `src/lib/server/http.ts` | Provider response limits, cancellation and deadlines |
+| `.env.example` | Setting names; actual credentials belong in ignored local files or host settings |
 
-The older unused page components and duplicate project manifest were removed. They remain recoverable from the previous Git commit if you need historical reference.
+Netlify uses a declared platform rule, not a per-instance memory counter. Its deployed routing and rate enforcement still need verification. Keep the generic Next.js fallback closed in production without its own protection. Never enable its memory option on serverless hosting. See the [security notes](SECURITY_AND_SCALE.md) for the different policies and limits.
 
-## Contact and server security
+## Analytics
 
-| File | Responsibility |
+`src/lib/analytics.ts` owns the production/origin gates, 90-day preference, allowlisted page views and consent transitions. `AnalyticsConsent.tsx` connects that controller to storage, Google’s script and the UI. The ID and enable switch are in `.env.example`; GA4 Enhanced Measurement must be switched off before enabling the manual page-view integration.
+
+Without acceptance, the integration does not load Google’s tag or send page views. Visitors can reject it and later use “Analytics preferences” in the footer. Routes sent to GA4 omit query strings and enquiry data. GA4 counts only consenting, measurable visits; use Netlify’s own usage dashboard for hosting limits.
+
+## Media and generation
+
+`public/gallery/` contains genuine stills. `public/frames/3`, `/6` and `/5` retain 96 source frames each. The homepage uses smaller generated atlases: 24 sampled views per chapter, packed into four content-hashed WebP images. `src/lib/atlasStore.ts` selects a tile; `frameStore.ts` bounds fetching, retries, decoding and disposal.
+
+| Script/file | Use |
 | --- | --- |
-| `src/app/api/contact/route.ts` | POST endpoint |
-| `src/lib/contactSchema.ts` | Shared field validation and plain-text sanitisation |
-| `src/lib/server/contactHandler.ts` | Origin checks, bounded request reading and email delivery |
-| `src/lib/server/rateLimit.ts` | Shared Redis protection and the explicit single-server fallback |
-| `src/lib/server/http.ts` | Bounded provider responses, cancellation and timeouts |
-| `.env.example` | Variable names and instructions; no real credentials |
-| `.env.local` | Your local secrets, if created; excluded from Git |
-| `next.config.ts` | Security headers, image-source restrictions and old-URL redirects |
-| `src/lib/environment.ts` | Shared preview/noindex policy |
-| `src/lib/schema.ts` | Business, service, article, project, FAQ and breadcrumb schema |
+| `scripts/prepare-story-sequences.mjs` | Rebuild source frames from the original films and import original galleries |
+| `scripts/prepare-budget-sequences.mjs` | Generate `public/atlases/` and `src/lib/generated/budgetSequences.ts` from those frames |
+| `src/lib/generated/budgetSequences.ts` | Generated atlas paths, dimensions and counts; do not edit manually |
+| `scripts/import-configurator.mjs` | Reimport the viewer, optimise embedded models and add the lifecycle bridge |
+| `scripts/configurator-models.mjs` | Pinned glTF Transform compression, physical-bounds checks and coordinate restoration |
+| `scripts/render-configurator-poster.mjs` | Generate the preview from the actual car model |
+| `scripts/prepare-media.mjs` | Older preview/poster preparation when required |
+| `scripts/export-release.mjs` | Export to a separate empty directory, omitting credentials, Git history and archived films |
 
-## Assets and scripts
+After changing source frames, regenerate the atlases too. After changing the source configurator, rerun its importer; it runs glTF Transform 4.5.1 in a temporary directory without adding runtime dependencies. Preserve the vehicle and wheel model attribution. Only the viewer’s CSP permits the pinned decoder’s WebAssembly execution.
 
-`public/gallery/` holds genuine project stills. `public/frames/3`, `/6` and `/5` power the homepage. `public/posters/` holds small previews; `public/brand/` holds the logo. The large automotive viewer is under `public/experiences/car/`.
+Archived local films and old previews remain available for preparation but are excluded from release exports. Do not push the original large-file local history directly to GitHub; follow the publishing guide’s release workflow.
 
-Archived films in `public/videos/`, old previews and unused motion sequences are preserved locally. Release exports exclude them because normal film playback uses Vimeo. Do not push this local repository's original large-file history directly to GitHub.
+## Checks and review
 
-| Script | Use |
-| --- | --- |
-| `scripts/prepare-story-sequences.mjs` | Rebuild WebP sequences and import original galleries |
-| `scripts/prepare-media.mjs` | Rebuild older source previews/posters when required |
-| `scripts/import-configurator.mjs` | Reimport the car viewer while preserving its models and credits |
-| `scripts/render-configurator-poster.mjs` | Rebuild the small preview from the supplied car model |
-| `scripts/export-release.mjs` | Export source and runtime assets to a separate empty directory, excluding secrets and archived films |
-| `.github/workflows/checks.yml` | GitHub checks for types, lint, tests, dependencies and build |
-| `.github/dependabot.yml` | Weekly dependency and action update proposals |
-| `tests/` | Contact/security, animation, media, portfolio, SEO and release-export regression checks |
+Use Node.js 24. Run `npm ci`, then `npm run dev` and open `http://localhost:3000`. Netlify-native routing requires Netlify’s deployment environment; ordinary Next.js development uses the generic endpoint.
 
-## Review locally
-
-Use Node.js 24. Run `npm ci`, then `npm run dev` and open `http://localhost:3000`.
-
-Before release, run `npm run type-check`, `npm run lint`, `npm test` and `npm run build`. Use `git diff main` to review local changes. The production publishing process is explained separately so that the old website stays available until its replacement has been verified.
+Before release, run `npm run type-check`, `npm run lint`, `npm test`, `npm run check:media-budget` and `npm run build`. `.github/workflows/checks.yml` runs the repository checks, while Dependabot proposes dependency updates. Check the [review results](REVIEW_RESULTS.md) for what was actually verified; passing local tests does not prove live email, GA4, platform rate enforcement or browser/WebGL behaviour.

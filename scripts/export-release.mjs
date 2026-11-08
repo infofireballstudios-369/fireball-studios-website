@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 
 export function includeInRelease(path) {
   const parts = path.split("/");
-  if (parts.some((part) => [".git", ".aws", ".codex", ".agents", "node_modules", ".next", ".vercel"].includes(part))) return false;
+  if (parts.some((part) => [".git", ".aws", ".codex", ".agents", "node_modules", ".next", ".vercel", ".netlify"].includes(part))) return false;
   if (parts.some((part) => part.startsWith(".env") && part !== ".env.example")) return false;
   if (/\.(?:pem|key|p12|pfx|tsbuildinfo)$/i.test(path)) return false;
   return !["public/videos/", "public/previews/", "public/motion/"].some((prefix) => path.startsWith(prefix)) && path !== "next-env.d.ts";

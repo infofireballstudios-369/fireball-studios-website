@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/ui/SiteLink";
 import { Building2, Armchair, Car, Scan, ArrowUpRight } from "lucide-react";
 const services = [
   { icon: Building2, title: "Spaces worth experiencing.", text: "Interior and exterior imagery that helps people understand the place before it exists.", label: "Architecture & property", anchor: "real-estate" },

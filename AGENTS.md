@@ -75,3 +75,11 @@ Use the dedicated website repository and branch `codex/vimeo-portfolio-refresh` 
 ## Maintenance and publishing
 
 Start with `docs/PROJECT_GUIDE.md` for file ownership, `docs/EMAIL_AND_PUBLISHING.md` for email/domain setup, and `docs/SECURITY_AND_SCALE.md` for operational limits. Keep gallery data in one place; source 3 uses only original 3.4/3.5 stills. Use the clean release exporter for GitHub because local history contains archived files above GitHub’s normal file limit. Preserve the existing live site until its replacement is verified.
+
+## Confirmed free hosting policy
+
+Use the existing GitHub repository, Netlify Free, Resend Free and GA4 Standard. The owner has authorised the review-branch push and Netlify preview preparation; merging and production domain cutover still require approval. Keep paid upgrades, add-ons and automatic recharge disabled. The verified Netlify account has 300 shared monthly credits, no payment method and top-ups disabled. A hard cap can pause the website; never promise unlimited capacity or uninterrupted hosting at this allowance.
+
+The default home story uses the generated, content-hashed WebP atlases in `public/atlases/` (24 sampled frames per chapter). Retain the original frame sequences for regeneration. Check the transfer budget before changing media. Keep the configurator deferred and preserve its model credits and scoped WebAssembly permission.
+
+On Netlify, the custom native function owns `/api/contact` and declares the platform rate-limit rule. The generic Next.js handler remains protected for other hosts. Store Resend credentials in server-only environment settings; do not require a separate Redis account on Netlify. Keep analytics disabled until the existing GA4 stream's Enhanced Measurement is off and production activation is approved. Analytics requires visitor consent and must remain disabled on previews.

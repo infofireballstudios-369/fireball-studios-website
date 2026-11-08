@@ -1,3 +1,5 @@
+import { generatedBudgetSequences } from "./generated/budgetSequences";
+
 export type SourceAssetId = 1 | 2 | 3 | 4 | 5 | 6;
 export type SequenceId = SourceAssetId;
 
@@ -24,6 +26,20 @@ export const sequenceConfigs: Record<SequenceId, SequenceConfig> = {
 
 export const homeSequenceIds = [3, 6, 5] as const;
 export type HomeSequenceId = (typeof homeSequenceIds)[number];
+
+export interface BudgetSequenceConfig extends SequenceConfig {
+  readonly frameWidth: number;
+  readonly frameHeight: number;
+  readonly columns: number;
+  readonly rows: number;
+  readonly atlasPaths: readonly string[];
+  readonly sourceFrameCount: number;
+  readonly sourceFrameIndices: readonly number[];
+  readonly encodedBytes: number;
+}
+
+/** Smaller homepage sequences, with content-hashed atlas URLs for immutable caching. */
+export const budgetSequenceConfigs = generatedBudgetSequences satisfies Record<HomeSequenceId, BudgetSequenceConfig>;
 
 function vimeoVideo(id: string): VimeoVideo {
   return { id, watchUrl: "https://vimeo.com/" + id, embedUrl: "https://player.vimeo.com/video/" + id };

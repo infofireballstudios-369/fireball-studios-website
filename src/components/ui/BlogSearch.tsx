@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/components/ui/SiteLink";
 import { useMemo, useState } from "react";
 import { Search, ArrowUpRight } from "lucide-react";
 import type { BlogPost } from "@/lib/blogData";

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/components/ui/SiteLink";
 import { ArrowUpRight } from "lucide-react";
 import { PageHeader, ContactBanner } from "@/components/ui/PageHeader";
 import { JsonLd } from "@/components/ui/JsonLd";

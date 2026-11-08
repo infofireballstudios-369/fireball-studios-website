@@ -82,12 +82,12 @@ test("articles retain their real publication dates and article-specific sharing 
 });
 
 test("previews are noindex while ordinary self-hosted and production builds remain indexable", () => {
-  for (const env of [{}, { NODE_ENV: "development" }, { VERCEL_ENV: "production" }, { SITE_NOINDEX: "false" }]) {
+  for (const env of [{}, { NODE_ENV: "development" }, { VERCEL_ENV: "production" }, { CONTEXT: "production" }, { SITE_NOINDEX: "false" }]) {
     assert.equal(shouldNoIndex(env), false);
     assert.ok(getIndexableSeoPages(env).length);
     assert.deepEqual(routeMetadata("/projects", env).robots, { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large" } });
   }
-  for (const env of [{ VERCEL_ENV: "preview" }, { VERCEL_ENV: "development" }, { SITE_NOINDEX: "true" }, { VERCEL_ENV: "production", SITE_NOINDEX: "true" }]) {
+  for (const env of [{ VERCEL_ENV: "preview" }, { VERCEL_ENV: "development" }, { CONTEXT: "deploy-preview" }, { CONTEXT: "branch-deploy" }, { CONTEXT: "dev" }, { SITE_NOINDEX: "true" }, { VERCEL_ENV: "production", SITE_NOINDEX: "true" }]) {
     assert.equal(shouldNoIndex(env), true);
     assert.deepEqual(getIndexableSeoPages(env), []);
     assert.deepEqual(routeMetadata("/projects/" + projectsData[0].slug, env).robots, { index: false, follow: false });

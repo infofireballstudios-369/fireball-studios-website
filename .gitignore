@@ -34,8 +34,9 @@ yarn-error.log*
 .env*
 !.env.example
 
-# vercel
+# local hosting state
 .vercel
+/.netlify/
 
 # typescript
 *.tsbuildinfo

@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/components/ui/SiteLink";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { ArrowRight, Check, Send, ShieldCheck } from "lucide-react";
 import { contactSchema, type ContactPayload } from "@/lib/contactSchema";

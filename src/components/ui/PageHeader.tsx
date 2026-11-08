@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/components/ui/SiteLink";
 import { ArrowUpRight } from "lucide-react";
 import { getSeoPage } from "@/lib/seo";
 import { getBreadcrumbSchema } from "@/lib/schema";

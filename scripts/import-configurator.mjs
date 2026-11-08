@@ -1,6 +1,7 @@
 import { readFile, mkdir, writeFile } from "node:fs/promises";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { optimiseEmbeddedModels, restoreModelCoordinates } from "./configurator-models.mjs";
 
 /** A small bridge keeps the opaque iframe isolated from the surrounding page. */
 export const configuratorBridge = String.raw`
@@ -44,6 +45,13 @@ function replaceOnce(html, original, replacement) {
 /** Preserve model data, attribution and controls while adding the host lifecycle. */
 export function prepareConfigurator(source) {
   let html = replaceOnce(source, '<html lang="en">', '<html lang="en-GB">');
+  html = replaceOnce(html, 'let THREE, OrbitControls, RoundedBoxGeometry;', 'let THREE, OrbitControls, RoundedBoxGeometry, MeshoptDecoder;');
+  html = replaceOnce(html, '[THREE, {OrbitControls}, {RoundedBoxGeometry}]', '[THREE, {OrbitControls}, {RoundedBoxGeometry}, {MeshoptDecoder}]');
+  html = replaceOnce(html, "import('three/addons/geometries/RoundedBoxGeometry.js')", "import('three/addons/geometries/RoundedBoxGeometry.js'), import('three/addons/libs/meshopt_decoder.module.js')");
+  html = replaceOnce(html, '// 1. CENTRAL CONFIGURATION STATE.', restoreModelCoordinates + '\n// 1. CENTRAL CONFIGURATION STATE.');
+  html = replaceOnce(html, "new GLTFLoader().parseAsync(decompressed,'')", "new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).parseAsync(decompressed,'')");
+  html = replaceOnce(html, 'model=result.scene;', 'model=restoreModelCoordinates(result.scene);');
+  html = replaceOnce(html, "const {scene:collection}=await new GLTFLoader().parseAsync(buffer,'');", "const {scene:collection}=await new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).parseAsync(buffer,'');restoreModelCoordinates(collection);");
   html = html.replace(/<style>([\s\S]*?)<\/style>/, (_, css) => '<style>' + css.replace(/font-size:(\d+)px/g, (_match, size) => 'font-size:' + Math.max(12, Number(size)) + 'px') + '</style>');
   html = replaceOnce(html, '<script type="module">', '<script id="fireball-integration">' + configuratorBridge + '</script>\n<script type="module">');
   html = replaceOnce(html, "// 1. CENTRAL CONFIGURATION STATE.", "if(window.fireballIntegration.isDisposed()) throw new Error('Configurator closed.');\n// 1. CENTRAL CONFIGURATION STATE.");
@@ -58,10 +66,15 @@ export function prepareConfigurator(source) {
 async function importConfigurator() {
   const source = resolve(process.argv[2] ?? "../Projects/Edited-2/fireball-car-configurator2.html");
   const destination = resolve("public/experiences/car/fireball-car-configurator2.html");
-  const html = prepareConfigurator(await readFile(source, "utf8"));
+  const option = process.argv.indexOf("--models-dir");
+  const modelsDirectory = option >= 0 ? process.argv[option + 1] : undefined;
+  if (option >= 0 && !modelsDirectory) throw new Error("Supply a prepared model directory after --models-dir.");
+  const optimised = await optimiseEmbeddedModels(await readFile(source, "utf8"), { modelsDirectory });
+  const html = prepareConfigurator(optimised.source);
   await mkdir(dirname(destination), { recursive: true });
   await writeFile(destination, html);
-  console.log("Imported the car configurator with its original model data, attribution and an isolated lifecycle bridge.");
+  console.log(JSON.stringify(optimised.report, null, 2));
+  console.log("Imported the optimised configurator with verified model bounds, original attribution and the isolated lifecycle bridge.");
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) await importConfigurator();

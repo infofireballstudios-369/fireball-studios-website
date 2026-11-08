@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/components/ui/SiteLink";
 
 export function Brand({ footer = false, onClick }: { footer?: boolean; onClick?: () => void }) {
   return (

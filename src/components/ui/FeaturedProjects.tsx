@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/components/ui/SiteLink";
 import { useState } from "react";
 import { ArrowUpRight, Play } from "lucide-react";
 import type { Project } from "@/types/portfolio";

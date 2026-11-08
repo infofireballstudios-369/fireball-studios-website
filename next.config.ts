@@ -5,13 +5,13 @@ const production = process.env.NODE_ENV === "production";
 const contentSecurityPolicy = [
   "default-src 'self'",
   // Next.js statically rendered pages include inline hydration scripts.
-  "script-src 'self' 'unsafe-inline'" + (production ? "" : " 'unsafe-eval'"),
+  "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com" + (production ? "" : " 'unsafe-eval'"),
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob:",
   "font-src 'self'",
   "media-src 'self' blob:",
   "frame-src 'self' https://player.vimeo.com",
-  "connect-src 'self'" + (production ? "" : " ws: wss:"),
+  "connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com" + (production ? "" : " ws: wss:"),
   "object-src 'none'",
   "base-uri 'none'",
   "frame-ancestors 'none'",
@@ -22,7 +22,7 @@ const contentSecurityPolicy = [
 // The imported viewer runs in an opaque sandbox; its pinned modules are isolated here.
 const configuratorSecurityPolicy = [
   "default-src 'none'",
-  "script-src 'unsafe-inline' https://cdn.jsdelivr.net/npm/three@0.170.0/",
+  "script-src 'unsafe-inline' 'wasm-unsafe-eval' https://cdn.jsdelivr.net/npm/three@0.170.0/",
   "style-src 'unsafe-inline'",
   "img-src data: blob:",
   "connect-src data: blob:",
@@ -59,6 +59,9 @@ const nextConfig: NextConfig = {
         ...(shouldNoIndex() ? [{ key: "X-Robots-Tag", value: "noindex, nofollow" }] : []),
         ...(production ? [{ key: "Strict-Transport-Security", value: "max-age=31536000" }] : []),
       ],
+    }, {
+      source: "/atlases/:path*",
+      headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }, { key: "X-Robots-Tag", value: "noindex" }],
     }, {
       source: "/experiences/car/fireball-car-configurator2.html",
       headers: [

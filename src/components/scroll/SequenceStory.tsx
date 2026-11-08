@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
+import Link from "@/components/ui/SiteLink";
 import { ArrowDown, ArrowUpRight } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { getFramePath, getFramePaths, getVideoPath, sequenceConfigs } from "@/lib/assetManifest";
-import { createFrameStore } from "@/lib/frameStore";
+import { budgetSequenceConfigs, getFramePath, getVideoPath } from "@/lib/assetManifest";
+import { createAtlasStore } from "@/lib/atlasStore";
 
 import type { StoryChapter } from "@/lib/homeStory";
 export type { StoryChapter } from "@/lib/homeStory";
@@ -29,13 +29,14 @@ export function SequenceStory({ chapters }: { chapters: readonly StoryChapter[] 
       return () => window.clearTimeout(timer);
     }
     const controller = new AbortController();
-    const stores = new Map<number, ReturnType<typeof createFrameStore>>();
+    const stores = new Map<number, ReturnType<typeof createAtlasStore>>();
     const motion = window.matchMedia("(prefers-reduced-motion: reduce), (max-height: 700px)");
     let cancelled = false;
     let currentChapter = 0;
     let currentFrame = 0;
     let drawnKey = "";
     let raf = 0;
+    let staticMode = false;
     const announced = new Set<number>();
     const failed = new Set<number>();
 
@@ -43,14 +44,15 @@ export function SequenceStory({ chapters }: { chapters: readonly StoryChapter[] 
       let store = stores.get(index);
       if (!store) {
         const chapter = chapters[index];
-        store = createFrameStore(getFramePaths(chapter.sequenceId, sequenceConfigs[chapter.sequenceId].frameCount), controller.signal, window.innerWidth < 700 ? 6 : 10);
+        store = createAtlasStore(budgetSequenceConfigs[chapter.sequenceId], controller.signal);
         stores.set(index, store);
       }
       return store;
     };
 
     const draw = (force = false) => {
-      const available = storeFor(currentChapter).nearest(currentFrame);
+      if (motion.matches) return;
+      const available = stores.get(currentChapter)?.nearest(currentFrame);
       if (!available || cancelled) return;
       const key = currentChapter + ":" + available.index;
       if (!force && key === drawnKey) return;
@@ -61,9 +63,11 @@ export function SequenceStory({ chapters }: { chapters: readonly StoryChapter[] 
       const image = available.frame;
       const scale = Math.min(width / image.width, height / image.height);
       context.clearRect(0, 0, width, height);
-      context.drawImage(image.source, (width - image.width * scale) / 2, (height - image.height * scale) / 2, image.width * scale, image.height * scale);
+      context.drawImage(image.source, image.crop.x, image.crop.y, image.crop.width, image.crop.height,
+        (width - image.width * scale) / 2, (height - image.height * scale) / 2, image.width * scale, image.height * scale);
       canvas.dataset.sequence = String(chapters[currentChapter].sequenceId);
       canvas.dataset.frame = String(available.index + 1);
+      canvas.dataset.sourceFrame = String(budgetSequenceConfigs[chapters[currentChapter].sequenceId].sourceFrameIndices[available.index]);
       drawnKey = key;
     };
     const schedule = () => {
@@ -102,7 +106,7 @@ export function SequenceStory({ chapters }: { chapters: readonly StoryChapter[] 
         setActive(index);
         const evicted: number[] = [];
         for (const [cachedIndex, store] of stores) {
-          if (Math.abs(cachedIndex - index) > 1) {
+          if (cachedIndex !== index) {
             stores.delete(cachedIndex);
             store.dispose();
             announced.delete(cachedIndex);
@@ -118,19 +122,34 @@ export function SequenceStory({ chapters }: { chapters: readonly StoryChapter[] 
           });
         }
       }
-      currentFrame = Math.round(local * (sequenceConfigs[chapters[index].sequenceId].frameCount - 1));
+      currentFrame = Math.round(local * (budgetSequenceConfigs[chapters[index].sequenceId].frameCount - 1));
       load(index, currentFrame);
       schedule();
-      if (!motion.matches) {
-        void storeFor(index).preload();
-        if (local > 0.6 && index + 1 < chapters.length) void storeFor(index + 1).preload();
-      }
       if (progressRef.current) progressRef.current.style.transform = "scaleX(" + progress + ")";
     };
     const sync = () => {
       triggerRef.current?.kill();
       triggerRef.current = null;
-      if (motion.matches) { update(0); return; }
+      if (motion.matches) {
+        staticMode = true;
+        stores.forEach((store) => store.dispose());
+        stores.clear();
+        announced.clear();
+        failed.clear();
+        currentChapter = 0;
+        currentFrame = 0;
+        drawnKey = "";
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        if (progressRef.current) progressRef.current.style.transform = "scaleX(0)";
+        queueMicrotask(() => {
+          if (!cancelled && motion.matches) {
+            setActive(0);
+            setStates(Object.fromEntries(chapters.map((_, index) => [index, "ready"])));
+          }
+        });
+        return;
+      }
+      if (staticMode) { staticMode = false; setStates({}); }
       gsap.registerPlugin(ScrollTrigger);
       triggerRef.current = ScrollTrigger.create({
         trigger: section,

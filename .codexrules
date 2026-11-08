@@ -17,3 +17,6 @@
 
 - Keep Interactive Residence gallery and cover restricted to genuine 3.4/3.5 stills, with the Vimeo film available on Home and Projects.
 - Keep small interface text readable; form inputs use at least 16px. Share project gallery data and film-dialog behaviour instead of duplicating implementations.
+- The approved initial stack is GitHub, Netlify Free, Resend Free and GA4 Standard. Keep paid upgrades and automatic recharge disabled. Monitor the shared 300-credit limit; high media use can pause the website.
+- Use the generated, content-hashed home atlases by default and retain original frames for regeneration. Check the media budget after changing assets.
+- On Netlify, use the native custom-path contact function and its platform rate limit. Keep credentials server-only and analytics off on previews; production GA4 needs consent and Enhanced Measurement disabled.

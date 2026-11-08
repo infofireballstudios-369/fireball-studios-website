@@ -5,131 +5,94 @@ A Next.js 16 App Router website for 3D visualisation, animation and interactive 
 ## Start here
 
 - [File and editing guide](docs/PROJECT_GUIDE.md)
-- [Email authentication and GitHub/domain publishing](docs/EMAIL_AND_PUBLISHING.md)
-- [Security and scaling notes](docs/SECURITY_AND_SCALE.md)
-- [SEO/AEO and keyword/topic management](docs/SEO_GUIDE.md)
+- [Email, GA4 and publishing setup](docs/EMAIL_AND_PUBLISHING.md)
+- [Free hosting budget and monitoring](docs/BUDGET_AND_USAGE.md)
+- [Security and scaling](docs/SECURITY_AND_SCALE.md)
+- [SEO/AEO topic management](docs/SEO_GUIDE.md)
+- [Verification and remaining checks](docs/REVIEW_RESULTS.md)
 
-## Review branch and preview
+## Local review
 
-The website now has a dedicated Git repository. The baseline is on main; this revision is on codex/vimeo-portfolio-refresh. The local source history preserves large original videos. GitHub publishing uses a clean release export and a separate branch in the existing website repository; see the publishing guide before pushing.
+Use Node.js 24. The dedicated local repository retains original large videos; do not push its history directly to GitHub. Local work remains on `codex/vimeo-portfolio-refresh`. The existing GitHub repository has a separate clean review branch, `codex/security-seo-launch-20261108`; `main` and the old live site remain unchanged pending approval.
 
-~~~sh
-git switch codex/vimeo-portfolio-refresh
+```sh
 npm ci
 npm run dev
-~~~
+```
 
-Open http://localhost:3000. Use Node.js 24. Next.js fetches the configured Google fonts at build time and serves them locally.
+Open http://localhost:3000. Google fonts are fetched at build time and served locally.
 
-~~~sh
+```sh
 npm run type-check
 npm run lint
 npm test
+npm run check:media-budget
 npm run build
 npm start
-~~~
+```
 
-Tests mock email delivery and do not send enquiries. Browser review is separate from compilation and HTTP checks.
+Tests mock delivery and never send enquiries. GitHub CI runs these checks plus a dependency audit. Browser and real email checks are separate from compilation.
 
-Run the checks above after changes; GitHub CI runs the same checks and a dependency audit. The latest verification results are reported with each revision. Browser access was unavailable during preparation, so desktop/mobile appearance, actual Vimeo playback and live WebGL controls still need browser review.
+## Hosting at £0 initially
+
+The selected stack is the existing GitHub repository, Netlify Free, Resend Free and GA4 Standard. The Netlify project is `fireball-studios-web`, in the existing `info-fireballstudios` team. The account was verified as Free with 300 shared monthly credits, no payment method and automatic top-ups disabled. Do not enable paid plans or recharge without the owner's approval.
+
+Netlify Free has a hard usage cap: the site can pause when its credits run out. Fewer than 5,000 visitors does not guarantee uninterrupted free hosting. Page views, data transferred, 3D launches, functions and production deploys also count. See the budget guide before enabling higher-resolution media or increasing deployment frequency. Draft deploys have no production-deploy credit charge; their traffic still counts.
+
+`netlify.toml` configures Next.js, the native contact function and non-indexable previews. GitHub Pages cannot run this app's email endpoint. Keep the existing domain and Pages site intact until the Netlify preview and email delivery have been reviewed. Follow the publishing guide for Git integration and the 123 Reg DNS cutover.
 
 ## Content and routes
 
 | Route | Content |
 | --- | --- |
-| / | Scroll story 3 → 6 → 5, services, featured sources 3 and 5, pricing and FAQs |
-| /projects | Six portfolio entries with category filters, image galleries and deferred film playback |
-| /projects/[slug] | Project film or interactive configurator, brief, gallery and credits |
-| /industries | Related property, architecture, automotive and furniture/product work |
-| /about | Studio approach and six-step creative process |
-| /blog, /blog/[slug] | Searchable insights and the spaceship concept article |
-| /contact | Name, phone, email and project description form |
-| /privacy, /terms | Website notices |
-| /sitemap.xml, /robots.txt | Search discovery |
+| `/` | Scroll story 3 → 6 → 5, services, featured sources 3 and 5, pricing and FAQs |
+| `/projects`, `/projects/[slug]` | Six portfolio entries, category filters, galleries and deferred films/configurator |
+| `/industries` | Related property, architecture, automotive and furniture/product work |
+| `/about` | Studio approach and six-stage process |
+| `/blog`, `/blog/[slug]` | Searchable insights, including the original spaceship concept |
+| `/contact` | Name, phone, email and project description |
+| `/privacy`, `/terms` | Website notices |
+| `/sitemap.xml`, `/robots.txt` | Search discovery |
 
-Project data lives in src/lib/projectsData.ts; source asset IDs are distinct from portfolio IDs. Featured projects are selected explicitly by source 3 and 5. Real Estate contains sources 1, 3 and 4; Architecture contains 2; Product Design contains 5. Automotive contains the car configurator. Source 6 is the original spaceship concept and belongs to the home story and blog only.
+`src/lib/projectsData.ts` is the portfolio source of truth. Source asset IDs differ from portfolio IDs. Real Estate uses sources 1, 3 and 4; Architecture uses 2; furniture/product uses 5. Automotive contains the configurator. Source 6 belongs to the home story and blog, never the portfolio. Featured sources 3 and 5 are selected explicitly. Interactive Residence uses only genuine 3.4 and 3.5 gallery stills, plus its film, on Home and Projects.
 
-Existing project URLs remain available. The former /blog/automotive-visualisation-brief URL permanently redirects to /blog/spaceship-concept-visualisation. Articles, process copy, industries, links and metadata use the revised content.
+Existing project URLs remain available. `/blog/automotive-visualisation-brief` permanently redirects to `/blog/spaceship-concept-visualisation`. The process is Understand → Design & Model → Design Review → Visualise → Review & Refine → Deliver. Do not invent clients, qualifications or commercial results.
 
-The six process stages are Understand → Design & Model → Design Review → Visualise → Review & Refine → Deliver. Portfolio entries are labelled as studio studies; client results and qualifications have not been invented.
+## Films and scroll media
 
-## Vimeo playback
+`src/lib/assetManifest.ts` centralises source IDs, Vimeo watch/embed URLs and original frame counts. Vimeo sources 1–6 map respectively to `1243948791`, `1243948789`, `1243951425`, `1243948790`, `1243948881` and `1243948923`. Normal playback serves a local poster first and creates one iframe only on request, with a direct Vimeo fallback. Check Vimeo domain privacy on the eventual production hostname.
 
-src/lib/assetManifest.ts is the source of truth for hosted films and frame counts.
+Homepage scrubbing remains local WebP/GSAP. Its default uses 24 sampled frames per chapter packed into 12 content-hashed atlases, approximately 0.79 MB total. It requests only current/nearby sheets, retains at most two decoded sheets in the active chapter, supports reverse scrubbing and preserves aspect ratio. Reduced-motion/short viewports use static content. Original 96-frame sequences remain in `public/frames/{3,6,5}` for regeneration; they are not wholesale preloaded. Original gallery stills live separately in `public/gallery/`.
 
-| Source | Vimeo video |
-| --- | --- |
-| 1 | https://vimeo.com/1243948791 |
-| 2 | https://vimeo.com/1243948789 |
-| 3 | https://vimeo.com/1243951425 |
-| 4 | https://vimeo.com/1243948790 |
-| 5 | https://vimeo.com/1243948881 |
-| 6 | https://vimeo.com/1243948923 |
+Rebuild source 6 from the MOV directly, then regenerate the lower-data atlases:
 
-VimeoPlayer serves a local poster first. An iframe is mounted only after an explicit playback action, with a direct Vimeo link and loading/error fallback. The portfolio grid opens one film at a time. No Vimeo SDK, player iframe or video stream loads in the initial page HTML. The iframe uses dnt=1 and retains the origin referrer needed for domain-restricted embeds.
-
-All six links returned successful Vimeo oEmbed metadata during the revision. Actual playback and domain privacy should also be checked in the deployment browser. If a Vimeo privacy setting changes, permit the preview or production hostname in the Vimeo account as appropriate.
-
-Original local films and older previews are preserved as source assets. They are no longer used for visitor-facing playback. Keeping an unused source file in public does not cause the browser to download it automatically.
-
-## Scroll and galleries
-
-The homepage remains a local WebP canvas sequence rather than a Vimeo scrubber:
-
-| Chapter | Frames | Preparation |
-| --- | --- | --- |
-| Property introduction | /frames/3/3.1.webp to 3.96.webp | Existing continuous move |
-| Spaceship concept | /frames/6/6.1.webp to 6.96.webp | 7.60–12.933 seconds of source 6, 18fps |
-| Furniture/product | /frames/5/5.1.webp to 5.96.webp | Existing continuous move |
-
-Sequence 6 comes from ../Projects/Edited-2/6.mp4.mov; the file is read in its original format. Its selected segment avoids the film’s hard cuts. The three active sequences total approximately 11 MB compressed.
-
-GSAP ScrollTrigger maps native scroll progress to frame indices. The canvas preserves aspect ratio, caps pixel density, prioritises the current frame and limits decoding to two concurrent frames. Compressed images preload progressively, while decoded-image caches and pending work remain bounded. Reduced-motion and short viewports use a static layout. Failed image loading offers a still and a hosted-film link.
-
-Original gallery stills are isolated in public/gallery/1 through /5. Interactive Residence now uses only 3.4 and 3.5 on Home and Projects, with its film available from both. Gallery cards and film dialogs share their implementations. Animation frames in public/frames are never treated as original gallery stills. Project 5 has two genuine gallery images, converted from its original PNG files.
-
-Reproduce derived media with FFmpeg and the original Projects folder:
-
-~~~sh
+```sh
 FFMPEG_PATH=/absolute/path/to/ffmpeg node scripts/prepare-story-sequences.mjs ../Projects --sequences=6
-~~~
+node scripts/prepare-budget-sequences.mjs
+npm run check:media-budget
+```
 
-The script imports gallery originals from Projects/Images. scripts/prepare-media.mjs retains the earlier preview preparation workflow. Keep originals intact and frame counts aligned with the files.
+The source is `../Projects/Edited-2/6.mp4.mov`; the selected continuous segment is 7.60–12.933 seconds at 18fps. Gallery originals come from `../Projects/Images`. Keep source media intact. The clean release exporter excludes archived videos, old previews and obsolete motion assets from deployment.
 
-## Automotive configurator
+## Automotive viewer
 
-/projects/car-configurator launches public/experiences/car/fireball-car-configurator2.html only on request. Its approximately 14.5 MB model payload is absent from the initial homepage and portfolio HTML. The iframe runs in an opaque sandbox, validates lifecycle messages, pauses when hidden and releases resources on close. A standalone link provides an alternative launch route.
+`/projects/car-configurator` launches the isolated viewer only on request. The compressed embedded-model HTML is approximately 2.48 MB with gzip, rather than the original 10.89 MB gzip. Meshopt preparation preserves geometry, controls and the original CC BY 4.0 credits. Pinned Three.js 0.170.0 modules load from jsDelivr only after launch. The viewer's scoped CSP permits its required WebAssembly decoder; ordinary pages retain their tighter policy.
 
-The viewer uses pinned Three.js 0.170.0 modules from jsDelivr. Only its own HTML response receives the required CDN and framing CSP permissions; other routes keep their existing restrictions. Its model data and original CC BY 4.0 credits are preserved, with visible attribution on the project page too.
+The sandbox validates lifecycle messages, pauses when hidden and releases resources on close. A standalone launch link is available. The poster is an offline render of the supplied model. Regenerate from the untouched original:
 
-The small car poster is an offline render of the actual supplied model with simplified lighting and source wheels; it is not a screenshot of the live interface. Regenerate the integration and poster from the source HTML with:
-
-~~~sh
+```sh
 node scripts/import-configurator.mjs
 node scripts/render-configurator-poster.mjs
-~~~
+```
 
-Both scripts accept the source location documented within them. The original source is ../Projects/Edited-2/fireball-car-configurator2.html.
+Model preparation uses the pinned glTF Transform CLI. Actual browser/WebGL appearance and mobile controls still require preview review.
 
-## Contact delivery
+## Contact and analytics
 
-Copy .env.example to .env.local for local development, or set the same values in your server environment. Never expose credentials through NEXT_PUBLIC variables or commit them.
+For Netlify, add two server-only values securely in project environment settings: `RESEND_API_KEY` and `CONTACT_FROM_EMAIL` (a bare address on a verified Resend sending domain). Keep them out of chat, Git and `NEXT_PUBLIC_*`. No Redis account is required for Netlify: its native function has a platform rule of two requests per IP/domain per 180 seconds, with up to ten seconds of enforcement delay. The generic Next.js API fallback still fails closed in production without a shared limiter. Redis settings in `.env.example` are optional for other hosts.
 
-- RESEND_API_KEY: the email delivery API key.
-- CONTACT_FROM_EMAIL: a bare sender address on a verified Resend domain.
-- UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN: shared production rate limiting.
-- CONTACT_SITE_ORIGIN: an optional extra HTTPS staging origin.
-- CONTACT_TRUST_PROXY=true: only where a proxy replaces incoming client IP headers; Vercel is detected automatically.
-- CONTACT_ALLOW_MEMORY_RATE_LIMIT=true: an explicit alternative for one persistent server, not multiple instances or serverless hosting.
+The fixed recipient is **info@fireballstudios.co.uk**. Name, phone, email and description are delivered as plain text, with the visitor's address as reply-to. Validation, sanitisation, origin checks, a honeypot, bounded uploads/provider responses, timeouts and idempotent retries protect the flow. Only provider acceptance shows success; inbox receipt must be confirmed separately. Errors retain the brief and offer a pre-filled email fallback. For preview tests, configure that exact HTTPS preview origin as `CONTACT_SITE_ORIGIN`.
 
-The fixed recipient is info@fireballstudios.co.uk. The visitor’s email is used as reply-to, and their name, phone and description appear in the text email. The shared Zod schema, sanitisation, origin checks, 16 KiB body limit, honeypot, timeouts and rate limiting protect the endpoint.
+The existing GA4 stream is `G-7RV5GM0GCF`. The owner confirmed Enhanced Measurement is off; `netlify.toml` enables this ID for production only. Local/example configuration and previews keep tracking off. The consent control additionally requires the HTTPS Fireball domain, loads Google only after acceptance, sends only known page views without query strings and supports withdrawal. See the setup guide for account settings and live verification.
 
-Only provider-confirmed acceptance produces success. Provider acceptance does not prove inbox receipt. Missing configuration returns an unavailable response; the form retains the brief and offers a pre-filled email draft including the phone number. Prices remain available on enquiry, with the comparable-quote price-match promise in surrounding copy.
-
-No delivery or Redis credentials were present during this revision, so live email delivery could not be tested. Configure the four required values above and verify a labelled test enquiry reaches the studio before release.
-
-## Release checks
-
-Security headers include CSP, HSTS in production, MIME-sniffing protection, referrer policy, permissions policy and framing restrictions. Static Next.js hydration requires the existing inline-script allowance; the imported viewer has its own narrowly scoped policy.
-
-Before merging, review the branch in desktop and mobile browsers, including Vimeo playback, reverse scroll scrubbing, configurator options and contact error/success states. Confirm internal links, the blog redirect and email delivery. This revision changes the local repository only and leaves main available for comparison.
+Before domain cutover, verify the sender, submit a labelled test enquiry, confirm inbox receipt, review desktop/mobile playback and controls, and approve the review branch. No merge or production cutover is performed automatically.

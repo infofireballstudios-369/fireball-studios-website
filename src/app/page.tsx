@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/ui/SiteLink";
 import { ArrowUpRight } from "lucide-react";
 import { SequencePlayer } from "@/components/scroll/SequencePlayer";
 import { homeChapters } from "@/lib/homeStory";

@@ -14,6 +14,8 @@ This site uses one topic map, the portfolio and article manifests, and server-re
 | Metadata output and social cards | [src/lib/metadata.ts](../src/lib/metadata.ts) |
 | Business, service, portfolio, article, FAQ and breadcrumb data | [src/lib/schema.ts](../src/lib/schema.ts) |
 | Visible breadcrumb navigation and matching schema | [src/components/ui/PageHeader.tsx](../src/components/ui/PageHeader.tsx) |
+| Preview indexing and production analytics gating | [src/lib/environment.ts](../src/lib/environment.ts), [src/lib/analytics.ts](../src/lib/analytics.ts) |
+| Analytics consent controls and privacy notice | [src/components/ui/AnalyticsConsent.tsx](../src/components/ui/AnalyticsConsent.tsx), [src/app/privacy/page.tsx](../src/app/privacy/page.tsx) |
 
 The topic map derives project and article entries from their manifests. Do not duplicate their titles or image paths in a second list. Each page calls routeMetadata with its route, and each sub-page passes that same route to PageHeader.
 
@@ -62,12 +64,15 @@ Canonicals always use https://fireballstudios.co.uk and omit query strings, frag
 
 The following environments use noindex and nofollow metadata:
 
+- Netlify `CONTEXT` is present and is anything except `production`, including `deploy-preview`, `branch-deploy` and `dev`.
 - VERCEL_ENV is present and is anything except production.
 - SITE_NOINDEX is exactly true, for a custom staging deployment.
 
 An ordinary self-hosted build without those flags remains indexable. Set deployment variables before building and rebuild when changing them, because pages are pre-rendered. Preview sitemaps are empty and do not advertise a sitemap in robots.txt.
 
-Robots.txt permits crawling of pages so crawlers can read noindex; it excludes the API path. The deployment also needs the same preview rule in an X-Robots-Tag response header to cover standalone HTML assets outside the App Router. Noindex is an indexing instruction, not access control: use hosting authentication for a private preview. [Google noindex guidance](https://developers.google.com/search/docs/crawling-indexing/block-indexing).
+Robots.txt permits crawling of pages so crawlers can read noindex; it excludes the API path. The deployment also needs the same preview rule in an X-Robots-Tag response header to cover standalone HTML assets outside the App Router. Check the deployed headers after the Netlify build. Noindex is an indexing instruction, not access control; do not put confidential material on a public preview. [Google noindex guidance](https://developers.google.com/search/docs/crawling-indexing/block-indexing).
+
+Netlify's `DEPLOY_PRIME_URL` identifies the primary URL for a particular deployment; it must not replace the public canonical origin. Production Fireball URLs remain canonical even when a build is viewed through a temporary Netlify address. Preview analytics stays off. A trusted preview enquiry test needs an exact `CONTACT_SITE_ORIGIN`; do not grant access to every Netlify hostname or give email secrets to untrusted pull requests. See [EMAIL_AND_PUBLISHING.md](EMAIL_AND_PUBLISHING.md) for deployment context and email setup. [Netlify build variables](https://docs.netlify.com/build/configure-builds/environment-variables/).
 
 ## Structured data limits
 
@@ -82,7 +87,7 @@ Video objects identify the supplied Vimeo watch and embed URLs. They do not inve
 Run the local checks after changes:
 
     npm run type-check
-    node --import tsx --test tests/seo.test.ts
+    node --import tsx --test tests/seo.test.ts tests/analytics.test.ts
     npm run build
 
 The SEO tests cover route coverage, topic entries, canonical URLs, social metadata, preview rules, breadcrumbs, structured data and sitemap consistency. Review the built HTML for a representative page in each section: title, description, canonical, robots, Open Graph, Twitter and visible content.
@@ -90,3 +95,23 @@ The SEO tests cover route coverage, topic entries, canonical URLs, social metada
 After an authorised production deployment, use Google Search Console and Bing Webmaster Tools to inspect representative URLs and submit the canonical sitemap at https://fireballstudios.co.uk/sitemap.xml. Validate supported structured data with Google's Rich Results Test. Submission helps discovery; it does not guarantee indexing. [Google sitemap guidance](https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap).
 
 Use real search queries, page impressions, clicks and enquiry quality to decide what to improve. Review a useful period of data rather than changing topics after each short-term fluctuation. Do not invent search-volume estimates or claim that a particular wording guarantees an AI citation.
+
+## Analytics and consent
+
+The chosen stack is Netlify Free, Resend Free and GA4 Standard. Its allowances and pause behaviour are documented in [EMAIL_AND_PUBLISHING.md](EMAIL_AND_PUBLISHING.md#free-limits-and-operating-rules). No paid analytics upgrade, Google Cloud billing account, BigQuery export or Google Ads connection is required for this site's visitor reports.
+
+Reuse the existing web stream **`G-7RV5GM0GCF`**, preserving its reporting history. The ID is public configuration, not a secret. Keep `NEXT_PUBLIC_ENABLE_ANALYTICS=false` until an account Editor has opened **Admin → Data collection and modification → Data streams → the existing web stream** and switched **Enhanced measurement OFF**. Confirm automatic browser-history page views, form interactions, outbound links, search, scrolling, video and downloads are disabled. Leave Google Signals, user-provided data, advertising personalisation, remarketing and Ads linking disabled. Do not create a duplicate tag through Google Tag Manager or a second script. [Google enhanced measurement settings](https://support.google.com/analytics/answer/9216061?hl=en).
+
+Once those account settings are confirmed, set `NEXT_PUBLIC_GA_MEASUREMENT_ID=G-7RV5GM0GCF` and `NEXT_PUBLIC_ENABLE_ANALYTICS=true` only in Netlify's production build environment, then redeploy. The code additionally requires `NODE_ENV=production`, a production hosting context, an indexable deployment and an HTTPS Fireball hostname. Localhost, preview hosts and the production deployment's temporary Netlify URL do not collect analytics. Without a valid enabled configuration, the consent interface is absent and analytics stays disabled.
+
+The implementation uses basic opt-in consent: no Google analytics script or analytics connection before acceptance. Accept and Reject have equal prominence, and Analytics preferences remains available in the footer once configured. The preference lasts up to 90 days. Rejection, withdrawal, expiry and storage failure stop collection; withdrawal removes accessible GA cookies and takes effect across open tabs. It cannot undo data already sent or cancel a request already in flight. [Google basic consent mode](https://support.google.com/analytics/answer/14009635?hl=en).
+
+Only recognised route paths and their titles are passed from the server to the client. The app sends one initial consented page view and one per subsequent known route, with no replay of visits before acceptance. Queries, fragments, unknown paths, raw referrers, enquiry fields and user IDs are excluded. GA4 may also generate its standard session and engagement events; disabling enhanced measurement prevents the additional automatic interactions listed above. Do not add contact names, emails, phone numbers or descriptions to events. [Google SPA guidance](https://developers.google.com/analytics/devguides/collection/ga4/single-page-applications), [Google's PII rules](https://support.google.com/analytics/answer/6366371?hl=en-SD).
+
+In the property's retention settings, prefer two months for user/event data and disable resetting retention on new activity. This is an account setting to verify, not something the code has changed. It does not delete aggregate standard reports after two months. Keep the visible privacy notice aligned with the settings actually chosen. [Google retention controls](https://support.google.com/analytics/answer/7667196?hl=en).
+
+After authorised production activation, check browser Network requests before any choice, after rejection, after acceptance and after withdrawal. Confirm exactly one `page_view` for each navigation, safe page addresses/titles, no enquiry data, and no new collection after withdrawal. Check cross-tab withdrawal and expiry too. Verify the accepted test visit in GA4 Realtime; allow normal reporting time for other reports. Local tests use mocks and cannot prove real Google delivery or account settings. Keep analytics disabled if these checks fail.
+
+GA4 reports cover consenting visitors whose browsers allow the tag; they are not a complete count of website traffic and cannot estimate remaining Netlify credits. Use Netlify's usage dashboard for hosting capacity, Search Console/Bing for search visibility, and GA4 for consented on-site behaviour. The existing domain, `main` branch and live tracking are not changed merely by preparing these files.
+
+Current status: the owner confirmed Enhanced Measurement is off on 8 November 2026. Production configuration now enables the existing ID in `netlify.toml`; preview configuration remains false. Live-domain consent, event delivery and the remaining GA4 account settings still need verification after the authorised cutover.
