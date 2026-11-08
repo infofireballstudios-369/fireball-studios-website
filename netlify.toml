@@ -1,0 +1,31 @@
+[build]
+  command = "npm run build:netlify"
+  publish = ".next"
+  functions = "netlify/functions"
+
+[build.environment]
+  NODE_VERSION = "24"
+  NEXT_TELEMETRY_DISABLED = "1"
+
+[functions]
+  node_bundler = "esbuild"
+
+[context.deploy-preview.environment]
+  SITE_NOINDEX = "true"
+  NEXT_PUBLIC_ENABLE_ANALYTICS = "false"
+
+[context.branch-deploy.environment]
+  SITE_NOINDEX = "true"
+  NEXT_PUBLIC_ENABLE_ANALYTICS = "false"
+
+[context.production.environment]
+  SITE_NOINDEX = "false"
+  # Existing stream: the owner confirmed Enhanced Measurement is disabled.
+  NEXT_PUBLIC_GA_MEASUREMENT_ID = "G-7RV5GM0GCF"
+  NEXT_PUBLIC_ENABLE_ANALYTICS = "true"
+
+[[redirects]]
+  from = "https://www.fireballstudios.co.uk/*"
+  to = "https://fireballstudios.co.uk/:splat"
+  status = 301
+  force = true
