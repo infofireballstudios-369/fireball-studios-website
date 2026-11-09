@@ -9,7 +9,7 @@ The owner authorised pushing the new static site to GitHub and replacing the old
 - Publication: the manually dispatched GitHub Pages workflow on `main`, publishing only `dist/`.
 - Previous live commit: `fd8d42bb6b2f1176603a4a88d37abff0d162db18`.
 - Complete old website backup: [archive/live-before-static-20261109](https://github.com/infofireballstudios-369/fireball-studios-website/tree/archive/live-before-static-20261109).
-- A second local archive and the original Pages/DNS settings were saved outside the source tree before cutover.
+- A second local archive and the original Pages/DNS settings are retained in `.archive/live-before-static-20261109/`, ignored by Git and excluded from publication.
 - The original Next.js project, source media and existing Next.js review branch remain preserved. No force-push or history reset is needed.
 
 The existing custom-domain assignment, HTTPS enforcement and website DNS records are retained. Zoho mailbox MX, SPF, DKIM and verification records are not changed. The domain registration and existing mailbox remain active. The old active design is replaced through a new Pages deployment rather than by deleting its backup or history.
@@ -18,7 +18,7 @@ The existing custom-domain assignment, HTTPS enforcement and website DNS records
 
 `FIREBALL_INDEXING_ENABLED=true` enables the 18 primary sitemap entries and indexable metadata. The `configure-pages` action supplies the existing custom-domain URL; output checks validate canonicals and social/structured URLs. Local builds continue to default to noindex previews. `FORM_PROVIDER=formsubmit` targets info@fireballstudios.co.uk without a backend or private credentials. `public/CNAME` retains the existing domain in the build.
 
-The form recipient still needs its one-time activation and a labelled inbox test. Provider acceptance is not confirmed receipt. Direct-email and copy-brief alternatives remain visible. Follow [CONTACT_SETUP.md](CONTACT_SETUP.md); do not claim email delivery works before that check.
+The form uses the same FormSubmit recipient URL as the old website, so existing activation may carry over. Complete activation if prompted and verify a labelled inbox test. Provider acceptance is not confirmed receipt. Direct-email and copy-brief alternatives remain visible. Follow [CONTACT_SETUP.md](CONTACT_SETUP.md); do not claim email delivery works before that check.
 
 Twelve useful old root HTML addresses have static meta-refresh redirects and visible fallback links. These preserve incoming links to current pages; they are not HTTP 301 responses. Removed technical-service addresses intentionally return the new 404 page rather than advertising services the studio does not offer.
 
@@ -42,4 +42,15 @@ Then inspect the Pages build status and verify the public domain serves the old 
 
 ## Deployment record
 
-Production publication is prepared; the actual workflow result and public-site checks must be recorded after deployment finishes. A successful local build alone is not a claim that the website is live.
+**Published successfully on 9 November 2026.**
+
+- [GitHub Actions run 42716503917](https://github.com/infofireballstudios-369/fireball-studios-website/actions/runs/42716503917): build and deployment both succeeded. The publish step completed at 23:05:26 GMT.
+- Published application commit: `a26744dc428d8aa28d5c1b2715a067791d78fbdf`.
+- Public verification at `2026-11-09T23:08:09.007Z` confirmed all 32 documents, 765 internal references, 65 valid fragments, 18 sitemap entries and required responsive/native 4K assets. The standalone configurator file is reachable; its scripts were not executed by these HTTP checks.
+- `www` redirects to the HTTPS apex domain. Unknown and retired service routes return the new 404 page.
+- Primary pages are indexable; legacy redirects and 404 remain noindex. This is not confirmation that a search engine has indexed or ranked the pages.
+- Domain assignment and HTTPS enforcement remain intact. A before/after comparison confirms website A/AAAA, `www` CNAME, mail MX and nameservers unchanged.
+- All 765 checked Next.js source/media files and its Git status remain unchanged.
+- No form submission was made. Existing FormSubmit activation may carry over, but inbox delivery and browser/mobile/Vimeo/WebGL interaction still need a real user check.
+
+The later documentation-only commit records this result; it does not change the published application assets. The workflow remains manual, so future publication requires an explicit Run workflow action on the intended commit.

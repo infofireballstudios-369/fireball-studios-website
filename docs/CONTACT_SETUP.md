@@ -1,16 +1,16 @@
 # Receive project enquiries by email
 
-This separate static site has no server or private email credentials. Its default contact form uses **FormSubmit**, a free hosted form-to-email service that does not require an account. The destination is fixed to **info@fireballstudios.co.uk**. This does not change the existing Next.js website or its Resend configuration.
+This separate static site has no server or private email credentials. Its default contact form uses **FormSubmit**, a free hosted form-to-email service that does not require an account. The old live website used the exact same FormSubmit recipient URL; an existing activation may carry over on the unchanged domain. The destination is fixed to **info@fireballstudios.co.uk**. This does not change the existing Next.js website or its Resend configuration.
 
 ## Default: FormSubmit, no account
 
 1. Run `npm run dev` in this standalone project and open the printed local address, then **Contact**. Alternatively use the approved static preview URL. Do not publish or change the domain just to activate the form.
 2. Enter your own contact details and label the description **TEST — Fireball Studios contact activation; no project enquiry**. Press **Send enquiry**. The form opens FormSubmit’s website; complete its security check.
-3. Open **info@fireballstudios.co.uk** and find the FormSubmit activation email. Check Junk/Spam too. Confirm the form using the activation link. The mailbox owner must do this; it is not an API key or a password.
+3. If FormSubmit requests activation, open **info@fireballstudios.co.uk** and find its activation email. An already activated form may not request this again. Check Junk/Spam too. Confirm the form using the activation link. The mailbox owner must do this; it is not an API key or a password.
 4. Return to the contact page and send a second clearly labelled test. Confirm that the email arrives and includes **name, phone, email and description**. Check the provider confirmation page as well as the actual mailbox. Provider acceptance and inbox receipt are separate checks.
 5. Repeat the receipt check on the final approved hostname after publication. If the provider requests activation for that origin/form, complete it. No domain or DNS changes are needed for this integration.
 
-**Current verification:** source/tests confirm the fixed recipient, four fields, local validation and provider action. No live activation or confirmed inbox receipt has been performed. Until steps 2–4 pass, delivery remains unverified.
+**Current verification:** source/tests confirm the fixed recipient, four fields, local validation and provider action. The old recipient URL matches, but no new live activation or confirmed inbox receipt has been performed. Until steps 2–4 pass, delivery remains unverified.
 
 The provider’s default CAPTCHA remains enabled. We do not add `_captcha=false`, a CAPTCHA SDK, automatic replies, extra recipients or paid features. FormSubmit performs its own spam checks; client validation cannot prevent direct endpoint abuse. The site never claims success just because its Send button was pressed. The provider handles the challenge and confirmation, while direct email and copy-brief alternatives remain available. The local form preserves details after validation errors. On a provider/network failure, return with the browser’s Back button; browser restoration varies, so copy the brief first if you want a separate copy. The page does not store personal details in local storage.
 
