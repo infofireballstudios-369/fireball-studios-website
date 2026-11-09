@@ -4,13 +4,14 @@ import { initMedia } from "./components/media";
 import { initContact } from "./components/contact";
 import { initGalleries } from "./components/gallery";
 import { initHeaderSizing } from "./components/header-size";
+import { initEnquiryFrame } from "./components/enquiry-frame";
 
 let generation = 0;
 let disposers: (() => void)[] = [];
 function start() {
   const current = ++generation;
   document.documentElement.classList.add("has-js");
-  disposers = [initHeaderSizing(), initNavigation(), initFilters(), initMedia(), initContact(), initGalleries()];
+  disposers = [initHeaderSizing(), initNavigation(), initFilters(), initMedia(), initContact(), initEnquiryFrame(), initGalleries()];
   if (document.querySelector("[data-story]")) {
     void import("./components/scroll-story").then(async ({ initScrollStory }) => {
       if (current !== generation) return;

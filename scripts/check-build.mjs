@@ -243,7 +243,15 @@ export async function checkBuild() {
   assert.ok(!routes.some(({ route }) => route.startsWith("projects/") && /spaceship/.test(route)));
   const contact = pages.get("contact/index.html");
   const fields = contact.all.filter((node) => ["input", "textarea", "select"].includes(node.tagName) && attrs(node).type !== "hidden" && attrs(node).name !== "website").map((node) => attrs(node).name);
-  assert.deepEqual(fields, ["name", "phone", "email", "message"]);
+  const hostedPanel = contact.all.find((node) => Object.hasOwn(attrs(node), "data-enquiry-frame"));
+  if (hostedPanel) {
+    assert.deepEqual(fields, [], "Hosted enquiry fields belong on the isolated capture origin");
+    const panelNodes = walk(hostedPanel);
+    const url = attrs(hostedPanel)["data-enquiry-url"];
+    assert.equal(url, "https://fireball-studios-enquiries.netlify.app/", "Only the approved capture root may be embedded");
+    assert.ok(panelNodes.some((node) => node.tagName === "a" && Object.hasOwn(attrs(node), "data-enquiry-standalone") && attrs(node).href === url), "A standalone form link remains available");
+    assert.ok(panelNodes.some((node) => node.tagName === "a" && attrs(node).href === "mailto:info@fireballstudios.co.uk"), "Hosted forms retain a direct-email fallback");
+  } else assert.deepEqual(fields, ["name", "phone", "email", "message"]);
   assert.ok(markup.get("contact/index.html").includes("mailto:info@fireballstudios.co.uk"));
   await stat(join(dist, ".nojekyll"));
   assert.equal(failures.length, 0, failures.join("\n"));

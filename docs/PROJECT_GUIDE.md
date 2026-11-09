@@ -97,3 +97,14 @@ Before publishing, test keyboard navigation, focus return after closing media, a
 ## Production publication and rollback
 
 The owner has authorised the existing GitHub repository and fireballstudios.co.uk for this static replacement. [LIVE_LAUNCH.md](LIVE_LAUNCH.md) records the backup, publication checks and rollback procedure. Local builds stay noindex unless explicitly configured for production.
+
+## Managed enquiry form
+
+- `capture/index.html` and `capture/thanks/index.html`: the four-field hosted form and native acknowledgement fallback.
+- `src/capture/`: shared-validation integration, same-origin submission, CAPTCHA handling, layout/state bridge and styling.
+- `capture/_headers`: exact framing/CAPTCHA permissions and noindex policy for the form host.
+- `src/components/enquiry-frame.ts`: deferred parent iframe, checked handshake, height updates and fallback links. No visitor fields cross the bridge.
+- `NETLIFY_FORM_URL` and `FORM_PROVIDER=netlify`: public build settings for the approved capture host.
+- `docs/CONTACT_SETUP.md`: notification recipient, dashboard checks, tests, limits and redeployment.
+
+The original website remains on GitHub Pages. The separate provider hosts only a small form; it does not host the site’s animation media or use a custom server API.

@@ -10,6 +10,7 @@ Use Node.js 24 (`.nvmrc` is included):
 
 ```sh
 npm install
+cp .env.example .env
 npm run dev
 ```
 
@@ -37,9 +38,11 @@ There are 32 generated page documents: 18 primary pages, the 404, the old-articl
 
 ## Contact behaviour
 
-The default form sends visitors to **FormSubmit**, a free hosted form service requiring no account. It forwards the four enquiry fields to **info@fireballstudios.co.uk** after recipient activation and its spam check. The provider’s default CAPTCHA stays enabled; no provider script loads in the website. Local validation, direct email and copy-brief alternatives remain available.
+The main website stays on **GitHub Pages**. Its contact panel loads a small, isolated **Netlify Forms** page, with the same four fields, CAPTCHA and spam protection. Enquiries are saved in the owner’s Netlify dashboard; a confirmed notification targets **info@fireballstudios.co.uk**. No custom backend, email API key or new account is required.
 
-**Activation and inbox delivery are not yet verified.** Follow [CONTACT_SETUP.md](docs/CONTACT_SETUP.md): submit a labelled test from the contact page, activate the confirmation email, then check a second test in the mailbox. No email provider, mailbox password or API key is embedded in the site. Optional Formspree and draft-only modes are documented there.
+The Netlify recipient confirmation has been verified. A real test must also confirm dashboard capture and inbox receipt; configuration alone is not proof of delivery. See [CONTACT_SETUP.md](docs/CONTACT_SETUP.md). Network/service errors keep the entered brief and show direct-email/copy alternatives. The old FormSubmit route returned a thank-you page without the owner receiving the test, so it is no longer the production transport.
+
+`npm run build:capture` creates the separate `capture-dist/` for the form host. The Pages build continues to publish only `dist/`, keeping all animation/media bandwidth on GitHub. Local development should load the public settings in `.env.example` as shown above.
 
 ## Static hosting and indexing
 

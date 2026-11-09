@@ -83,3 +83,9 @@ This standalone version installs no Google Analytics or advertising tracker. Git
 ## Higher-quality media and traffic
 
 The on-disk library contains several resolutions, but visitors request only the selected tier and nearby frames for the active chapter. See [MEDIA_QUALITY.md](MEDIA_QUALITY.md) for exact selection rules and measured bytes. A complete uncached home traversal is about 10.94 MB at 1280px, 28.38 MB at 1920px, 38.10 MB at 2560px or 59.49 MB at native 4K. At 5,000 complete uncached traversals, the Full HD and higher tiers exceed the 100 GB soft monthly allowance before other resources. Adaptive/progressive loading can reduce actual transfer but does not guarantee capacity. Nothing here enables a paid upgrade or changes hosting. Review real host usage and choose the media policy accordingly before publication.
+
+## Production contact handling
+
+The main Pages deployment now selects `FORM_PROVIDER=netlify` and the public `NETLIFY_FORM_URL=https://fireball-studios-enquiries.netlify.app/`. The isolated form is managed by the existing Netlify Free account. It captures a dashboard copy and notifies the confirmed studio recipient. The website domain, DNS and Zoho routing are unchanged.
+
+Build `capture-dist/` separately with `npm run build:capture` and deploy only that directory to the enquiry project. Do not deploy the full media library to Netlify. The Pages workflow validates this build but does not transfer Netlify credentials or automatically publish the capture project. Follow [CONTACT_SETUP.md](CONTACT_SETUP.md) for the authorised CLI procedure and test record.

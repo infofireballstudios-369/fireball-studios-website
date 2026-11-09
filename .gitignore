@@ -19,3 +19,9 @@ dist/
 /public/robots.txt
 /public/sitemap.xml
 /public/.nojekyll
+
+# Separate managed form build; only its source is tracked.
+/capture-dist/
+
+# Local provider link/build metadata; authentication stays outside source.
+.netlify/

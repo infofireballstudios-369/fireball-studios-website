@@ -31,12 +31,15 @@ jobs:
       - run: npm ci
       - run: npm test
       - run: npm audit --audit-level=moderate
+      - name: Validate the managed enquiry form build
+        run: npm run build:capture
       - name: Generate and validate static files
         run: npm run build
         env:
           SITE_URL: ${{ steps.pages.outputs.base_url }}
           FORM_PROVIDER: ${{ vars.FORM_PROVIDER || 'formsubmit' }}
           FORMSPREE_ENDPOINT: ${{ vars.FORMSPREE_ENDPOINT }}
+          NETLIFY_FORM_URL: ${{ vars.NETLIFY_FORM_URL }}
           NOINDEX: ${{ vars.FIREBALL_INDEXING_ENABLED == 'true' && 'false' || 'true' }}
       - run: npm run check:pages
       - uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4

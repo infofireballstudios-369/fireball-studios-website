@@ -1,6 +1,6 @@
-import { getFormEndpoint } from "./form-endpoint";
+import { getFormEndpoint, getNetlifyFormUrl } from "./form-endpoint";
 
-export interface BuildConfig { siteUrl: string; noIndex: boolean; development: boolean; formEndpoint?: string; formProvider?: "formsubmit" | "formspree" | "email" }
+export interface BuildConfig { siteUrl: string; noIndex: boolean; development: boolean; formEndpoint?: string; netlifyFormUrl?: string; formProvider?: "formsubmit" | "formspree" | "netlify" | "email" }
 
 export function readBuildConfig(env: Record<string, string | undefined> = process.env, development = process.argv.includes("--dev")): BuildConfig {
   const value = env.SITE_URL || "https://fireballstudios.co.uk/";
@@ -8,10 +8,12 @@ export function readBuildConfig(env: Record<string, string | undefined> = proces
   if (!["https:", "http:"].includes(url.protocol) || url.username || url.password || url.search || url.hash) throw new Error("SITE_URL must be a plain absolute HTTP(S) website URL.");
   if (url.protocol !== "https:" && !["localhost", "127.0.0.1", "[::1]"].includes(url.hostname)) throw new Error("Public SITE_URL must use HTTPS.");
   const formEndpoint = getFormEndpoint(env.FORMSPREE_ENDPOINT);
+  const netlifyFormUrl = getNetlifyFormUrl(env.NETLIFY_FORM_URL);
   const formProvider = env.FORM_PROVIDER || (formEndpoint ? "formspree" : "formsubmit");
-  if (!["formsubmit", "formspree", "email"].includes(formProvider)) throw new Error("FORM_PROVIDER must be formsubmit, formspree or email.");
+  if (!["formsubmit", "formspree", "netlify", "email"].includes(formProvider)) throw new Error("FORM_PROVIDER must be formsubmit, formspree, netlify or email.");
   if (formProvider === "formspree" && !formEndpoint) throw new Error("Formspree requires a verified public FORMSPREE_ENDPOINT.");
-  return { siteUrl: url.href.replace(/\/?$/, "/"), noIndex: development || env.NOINDEX !== "false", development, formEndpoint, formProvider: formProvider as BuildConfig["formProvider"] };
+  if (formProvider === "netlify" && !netlifyFormUrl) throw new Error("Netlify capture requires an explicitly configured NETLIFY_FORM_URL.");
+  return { siteUrl: url.href.replace(/\/?$/, "/"), noIndex: development || env.NOINDEX !== "false", development, formEndpoint, netlifyFormUrl, formProvider: formProvider as BuildConfig["formProvider"] };
 }
 
 export function pagePrefix(route: string): string {

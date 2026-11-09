@@ -54,3 +54,18 @@ Then inspect the Pages build status and verify the public domain serves the old 
 - No form submission was made. Existing FormSubmit activation may carry over, but inbox delivery and browser/mobile/Vimeo/WebGL interaction still need a real user check.
 
 The later documentation-only commit records this result; it does not change the published application assets. The workflow remains manual, so future publication requires an explicit Run workflow action on the intended commit.
+
+
+## Contact delivery revision
+
+The owner reported that a FormSubmit success page did not produce an enquiry or activation email. Ordinary email reached the studio and Zoho Quarantine was empty. The replacement uses the existing Netlify Free team only for a small isolated capture form; the main website/media stay on GitHub Pages.
+
+- Capture project: `fireball-studios-enquiries`, ID `53f38868-600d-47ff-b31d-d2ddc944bf6f`.
+- Public form: https://fireball-studios-enquiries.netlify.app/
+- Stored form: `fireball-project-enquiry`, ID `6af25a79aa0baf0769264ad8`.
+- Only notification recipient: **info@fireballstudios.co.uk**. The owner confirmed the Netlify email; provider state shows no pending confirmation and no recipient restriction.
+- Separate build `capture-dist/`; no Node/custom function runtime. CAPTCHA, honeypot, shared four-field validation, retained briefs after network errors and checked frame messages are in place.
+- The account was verified Free, with automatic top-ups disabled. Two production form deploys use 30 of the 300 included credits; no paid plan or recharge was enabled.
+- The old Next.js preview, original files, production domain and email DNS are preserved.
+
+Configuration and recipient confirmation have been verified. Actual test capture, email receipt and the GitHub contact-mode deployment must be recorded after their checks finish. See [CONTACT_SETUP.md](CONTACT_SETUP.md) for operation and maintenance.

@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow, noimageindex">
+  <meta name="theme-color" content="#0f1115">
+  <meta name="description" content="Share your 3D visualisation brief with Fireball Studios.">
+  <title>Project enquiry | Fireball Studios</title>
+  <link rel="icon" type="image/webp" href="../public/brand/fireball-mark.webp">
+  <script type="module" src="../src/capture/main.ts"></script>
+</head>
+<body>
+  <div class="capture-shell" data-capture-content>
+    <header class="capture-header standalone-only">
+      <a class="brand" href="https://fireballstudios.co.uk/" aria-label="Fireball Studios home"><img src="../public/brand/fireball-mark.webp" alt="" width="30" height="49"><span>fireball<small>STUDIOS</small></span></a>
+      <a class="back-link" href="https://fireballstudios.co.uk/contact/">Back to the studio <span aria-hidden="true">↗</span></a>
+    </header>
+    <main id="main" class="capture-card">
+      <p class="eyebrow">Start a conversation</p>
+      <h1>A little about your project.</h1>
+      <p class="intro">Tell us what you want to bring to life. Complete the security check, then send your brief to the studio.</p>
+      <form name="fireball-project-enquiry" method="POST" action="/thanks/" data-netlify="true" netlify-honeypot="website" data-netlify-recaptcha="true" data-capture-form>
+        <input type="hidden" name="form-name" value="fireball-project-enquiry">
+        <div class="honeypot" aria-hidden="true"><label for="website">Leave this field empty<input id="website" name="website" type="text" tabindex="-1" autocomplete="off"></label></div>
+        <div class="form-grid">
+          <div class="field"><label for="name">Name</label><input id="name" name="name" type="text" autocomplete="name" minlength="2" maxlength="100" required aria-describedby="error-name"><span class="field-error" id="error-name" data-error-for="name"></span></div>
+          <div class="field"><label for="phone">Phone number</label><input id="phone" name="phone" type="tel" autocomplete="tel" minlength="7" maxlength="40" required aria-describedby="error-phone"><span class="field-error" id="error-phone" data-error-for="phone"></span></div>
+          <div class="field field-wide"><label for="email">Email address</label><input id="email" name="email" type="email" autocomplete="email" maxlength="254" required aria-describedby="error-email"><span class="field-error" id="error-email" data-error-for="email"></span></div>
+          <div class="field field-wide"><label for="message">Project description</label><textarea id="message" name="message" rows="5" minlength="10" maxlength="4000" required aria-describedby="error-message" placeholder="Tell us about your space, product or creative idea."></textarea><span class="field-error" id="error-message" data-error-for="message"></span></div>
+        </div>
+        <div class="captcha-region" data-captcha-region tabindex="-1" aria-label="Security check"><div class="captcha-slot" data-captcha-slot><div data-netlify-recaptcha="true" data-size="compact"></div></div></div>
+        <p class="form-status" data-form-status role="status" aria-live="polite" aria-atomic="true"></p>
+        <button class="button" type="submit">Send enquiry <span aria-hidden="true">↗</span></button>
+        <div class="form-alternatives"><a href="mailto:info@fireballstudios.co.uk" target="_blank" rel="noopener noreferrer" data-email-draft>Email the studio directly <span aria-hidden="true">↗</span></a><button class="text-button" type="button" data-copy-brief hidden>Copy your brief</button></div>
+        <p class="privacy-note">Netlify securely processes and stores your submission for Fireball Studios and sends a notification to info@fireballstudios.co.uk. We use your details to discuss your project. Please avoid sensitive information. <a href="https://www.netlify.com/privacy/" target="_blank" rel="noopener noreferrer">Netlify privacy</a> · <a href="https://fireballstudios.co.uk/privacy/" target="_blank" rel="noopener noreferrer">Studio privacy notice</a></p>
+        <noscript><p class="form-note">Complete the security check before sending. If it does not load, email <a href="mailto:info@fireballstudios.co.uk" target="_blank" rel="noopener noreferrer">info@fireballstudios.co.uk</a> directly.</p></noscript>
+      </form>
+    </main>
+    <footer class="capture-footer standalone-only"><span>Fireball Studios · United Kingdom</span><a href="https://fireballstudios.co.uk/">Explore the studio ↗</a></footer>
+  </div>
+</body>
+</html>
