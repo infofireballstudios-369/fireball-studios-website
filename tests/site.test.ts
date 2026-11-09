@@ -8,6 +8,7 @@ import { getBusinessSchema, serialiseSchema } from "../src/lib/schema.ts";
 import { projects, featuredProjects } from "../src/data/projects.ts";
 import { blogPosts } from "../src/data/blog.ts";
 import { industries, process, faqs } from "../src/data/content.ts";
+import { legacyRoutes } from "../src/data/legacyRoutes.ts";
 
 const siteUrl = "https://fireballstudios.github.io/fireball-static/";
 const config = readBuildConfig({ SITE_URL: siteUrl, NOINDEX: "false" }, false);
@@ -36,8 +37,8 @@ test("public canonical settings require HTTPS and reject credentials or URL suff
   for (const url of ["http://localhost:5175/", "http://127.0.0.1:5175/", "http://[::1]:5175/"]) assert.equal(readBuildConfig({ SITE_URL: url }, true).siteUrl, url);
 });
 
-test("the build contains 18 primary pages and two non-indexed fallback documents without collisions", () => {
-  assert.equal(pages.length, 20);
+test("the build retains 18 primary pages, two fallbacks and known legacy redirects without collisions", () => {
+  assert.equal(pages.length, 20 + legacyRoutes.length);
   assert.equal(primary.length, 18);
   assert.equal(new Set(pages.map((page) => page.route)).size, pages.length);
   assert.equal(new Set(pages.map((page) => page.file ?? `${page.route}index.html`)).size, pages.length);

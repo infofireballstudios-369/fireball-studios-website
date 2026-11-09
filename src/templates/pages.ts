@@ -1,5 +1,6 @@
 import { site } from "../data/site";
 import { formsubmitAction } from "../lib/form-endpoint";
+import { legacyRoutes, getLegacyRoute } from "../data/legacyRoutes";
 import { getSequencePoster, type SequenceId } from "../data/assetManifest";
 import { projects, categories, featuredProjects, getProject, type Project } from "../data/projects";
 import { blogPosts, type BlogPost } from "../data/blog";
@@ -139,5 +140,15 @@ export function buildPages(config: BuildConfig): StaticPage[] {
   }
   pages.push({ route: "404", file: "404.html", title: "Page not found", description: "This page could not be found. Explore Fireball Studios’ visualisation portfolio.", image: "images/posters/1.webp", noIndex: true, body: `<section class="container missing-page">${eyebrow("404 / A different direction")}<h1>Out of the frame.</h1><p>That page could not be found. Let’s get you back to something worth exploring.</p>${link("Return to the studio", config.siteUrl, "button button-amber")}</section>` });
   pages.push({ route: "blog/automotive-visualisation-brief/", title: "Studio article moved", description: "The original spaceship concept article has moved.", image: "images/posters/6.webp", noIndex: true, redirect: "../../blog/spaceship-concept-visualisation/", body: `<section class="container missing-page">${eyebrow("The studio journal")}<h1>This story has moved.</h1><p>Our original spaceship concept has its own studio article.</p>${link("Read the spaceship concept story", "../../blog/spaceship-concept-visualisation/", "button button-amber")}</section>` });
-  return pages.map((entry) => ({ ...entry, seoTitle: getPageSeo(entry.route).title, seoDescription: getPageSeo(entry.route).description }));
+  pages.push(...legacyRoutes.map((legacy): StaticPage => ({
+    route: legacy.file,
+    file: legacy.file,
+    title: legacy.title,
+    description: legacy.description,
+    image: "images/posters/1.webp",
+    noIndex: true,
+    redirect: "./" + legacy.target,
+    body: `<section class="container missing-page">${eyebrow("A new address")}<h1>${e(legacy.title)}</h1><p>${e(legacy.description)}</p>${link(legacy.linkLabel, "./" + legacy.target, "button button-amber")}</section>`,
+  })));
+  return pages.map((entry) => getLegacyRoute(entry.route) ? entry : ({ ...entry, seoTitle: getPageSeo(entry.route).title, seoDescription: getPageSeo(entry.route).description }));
 }

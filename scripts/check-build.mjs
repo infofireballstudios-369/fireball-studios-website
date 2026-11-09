@@ -175,8 +175,9 @@ export async function checkBuild() {
     assert.ok(canonicalUrl.pathname.startsWith(base.pathname) && !canonicalUrl.search && !canonicalUrl.hash, file + ": canonical preserves the project prefix");
     assert.equal(canonical, route.canonical, file + ": route manifest canonical matches output");
     const refresh = collectReferences(all).find((reference) => reference.attribute === "refresh");
-    const expectedCanonical = refresh ? new URL(refresh.target, new URL(route.route, siteUrl)).href : new URL(route.file === "404.html" ? route.file : route.route, siteUrl).href;
-    assert.equal(canonical, expectedCanonical, file + ": canonical target");
+    const expectedCanonical = refresh ? new URL(refresh.target, new URL(route.route, siteUrl)) : new URL(route.file === "404.html" ? route.file : route.route, siteUrl);
+    expectedCanonical.hash = "";
+    assert.equal(canonical, expectedCanonical.href, file + ": canonical target");
     assert.equal(meta("og:title"), title, file + ": Open Graph title");
     assert.equal(meta("twitter:title"), title, file + ": Twitter title");
     assert.equal(meta("og:description"), description, file + ": Open Graph summary");

@@ -1,6 +1,8 @@
 # Static revision verification — 9 November 2026
 
-Applies to the isolated project at `/Users/hc/Documents/Fireball/fireball-gh-pages`, review branch `codex/seo-quality-contact`. No publication, push, merge, domain or DNS changes were made.
+This is the local preparation record. The later authorised production rollout and preserved old website are recorded in [LIVE_LAUNCH.md](LIVE_LAUNCH.md).
+
+Applies to the isolated project at `fireball-gh-pages`, review branch `codex/seo-quality-contact`. No publication, push, merge, domain or DNS changes were made.
 
 ## Completed checks
 

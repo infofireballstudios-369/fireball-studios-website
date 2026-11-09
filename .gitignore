@@ -8,8 +8,7 @@ dist/
 *.log
 
 # Generated HTML entry points and discovery files
-/index.html
-/404.html
+/*.html
 /projects/
 /industries/
 /about/

@@ -1,0 +1,9 @@
+{
+  "build_type": "legacy",
+  "cname": "fireballstudios.co.uk",
+  "https_enforced": true,
+  "source": {
+    "branch": "archive/live-before-static-20261109",
+    "path": "/"
+  }
+}

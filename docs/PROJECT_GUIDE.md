@@ -1,6 +1,6 @@
 # Fireball Studios standalone project guide
 
-This is a separate static portfolio built with Vite 8, TypeScript 7 and GSAP. Its intended working folder is `/Users/hc/Documents/Fireball/fireball-gh-pages`. The existing Next.js project at `/Users/hc/Documents/Fireball/website-FB` remains unchanged and is not a dependency of ordinary builds.
+This is a separate static portfolio built with Vite 8, TypeScript 7 and GSAP. Its intended working folder is `fireball-gh-pages`. The existing Next.js project at `../website-FB` remains unchanged and is not a dependency of ordinary builds.
 
 The previous starter is preserved in `.archive/original-20261109`. It is an archive, not a deployment source. Publish only the new `dist/` output. This work has not published a website or changed DNS.
 
@@ -93,3 +93,7 @@ Before publishing, test keyboard navigation, focus return after closing media, a
 - [src/lib/form-endpoint.ts](../src/lib/form-endpoint.ts) and [send-enquiry.ts](../src/lib/send-enquiry.ts): approved provider destinations and optional Formspree transport.
 - [docs/MEDIA_QUALITY.md](MEDIA_QUALITY.md): source resolutions, adaptive quality, cache limits and transfer budgets.
 - [scripts/prepare-quality-assets.mjs](../scripts/prepare-quality-assets.mjs): optional original-source extraction; ordinary builds use shipped files.
+
+## Production publication and rollback
+
+The owner has authorised the existing GitHub repository and fireballstudios.co.uk for this static replacement. [LIVE_LAUNCH.md](LIVE_LAUNCH.md) records the backup, publication checks and rollback procedure. Local builds stay noindex unless explicitly configured for production.

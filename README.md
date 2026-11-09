@@ -2,7 +2,7 @@
 
 A complete, separate Fireball Studios portfolio built with Vite 8, TypeScript and GSAP ScrollTrigger. It uses the official brand mark, real studio imagery, local WebP storytelling and deferred Vimeo/3D experiences. All page content is generated into semantic HTML; the deployed site needs **no Node runtime, backend, API or database**.
 
-The existing Next.js project at `/Users/hc/Documents/Fireball/website-FB` is a read-only reference and is not changed by this project. The previous broken static starter is preserved locally in `.archive/original-20261109/`; it is neither built nor published.
+The existing Next.js project at `../website-FB` is a read-only reference and is not changed by this project. The previous broken static starter is preserved locally in `.archive/original-20261109/`; it is neither built nor published.
 
 ## Run locally
 
@@ -33,7 +33,7 @@ The production preview runs at **http://127.0.0.1:4175/**. Publish only the cont
 - Privacy/terms, static404, old-article redirect, canonicals, social metadata, business/service/FAQ/article/breadcrumb schema and sitemap.
 - Local fonts, reduced-motion and short-viewport fallbacks, bounded frame decoding and explicit player lifecycle cleanup.
 
-There are 20 generated page documents, including 18 primary pages, the404 and the old-article redirect. The isolated configurator is an additional standalone HTML experience. No local MP4 playback or video SDK is loaded on initial pages.
+There are 32 generated page documents: 18 primary pages, the 404, the old-article redirect and 12 legacy root HTML redirects. The isolated configurator is an additional standalone HTML experience. No local MP4 playback or video SDK is loaded on initial pages.
 
 ## Contact behaviour
 
@@ -51,9 +51,9 @@ For a local build configuration, optionally copy `.env.example` to `.env`. Node 
 SITE_URL=https://YOUR-USERNAME.github.io/YOUR-NEW-REPOSITORY/ NOINDEX=false npm run build
 ```
 
-Default builds are **noindex previews**, protecting the current live site's search presence. Choose the actual static publication URL before enabling indexing. `SITE_URL` controls canonicals, schema and sitemap; it does not move your domain or contact the live project.
+Default local builds are **noindex previews**. The approved production URL is https://fireballstudios.co.uk/; its GitHub workflow enables indexing through the production repository variable. `SITE_URL` controls canonicals, schema and sitemap; it does not move your domain or contact the live project.
 
-A pinned, manually triggered GitHub Pages workflow is included. Use a **separate repository**, enable Pages → GitHub Actions, and follow [the deployment guide](docs/DEPLOYMENT.md). There is no CNAME and no automatic push/deployment or domain cutover.
+The owner authorised publication through the existing [GitHub repository](https://github.com/infofireballstudios-369/fireball-studios-website). A pinned, manually triggered Pages workflow publishes only `dist/`. The original live version is preserved in `archive/live-before-static-20261109`; the Next.js project remains untouched. See [launch and rollback details](docs/LIVE_LAUNCH.md) and [the deployment guide](docs/DEPLOYMENT.md). `public/CNAME` retains the existing domain; no DNS or email changes are needed.
 
 GitHub's current Pages terms restrict using it to run an online business, e-commerce or commercial SaaS. This build is technically compatible with Pages; confirm that your intended publication is permitted before using it for the studio. See [GitHub Pages limits](https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits). No claim of unlimited free hosting is made.
 

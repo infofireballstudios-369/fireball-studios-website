@@ -1,6 +1,6 @@
 # Deploying the standalone static site
 
-This guide applies only to `/Users/hc/Documents/Fireball/fireball-gh-pages`. The existing `/Users/hc/Documents/Fireball/website-FB` project and live domain are unchanged. No GitHub repository, Pages deployment, custom domain or DNS change is created by a local build.
+This guide applies only to `fireball-gh-pages`. The existing `../website-FB` project is unchanged. On 9 November 2026 the owner authorised publishing this static replacement through the existing GitHub repository at fireballstudios.co.uk. See [LIVE_LAUNCH.md](LIVE_LAUNCH.md) for the exact backup and rollout. Local builds alone never publish anything.
 
 ## Confirm GitHub Pages suitability first
 
@@ -8,7 +8,7 @@ GitHub Pages is available with GitHub Free for public repositories. Its current 
 
 The published-site limit is 1 GB and the bandwidth allowance is a soft 100 GB per month, not unlimited traffic. The revised local build is approximately 135 MB, including all optional native-resolution frame tiers; its size is well below the site limit, but downloads, repeat visits and bots still consume bandwidth. There is no guaranteed visitor capacity. [GitHub Pages limits](https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits).
 
-Keep the publication separate from the existing live repository/site until a replacement is explicitly approved. Do not add a `CNAME`, configure a custom domain or change DNS as part of an isolated review deployment.
+The owner has now approved replacement of the existing GitHub Pages site. Preserve its old source/history and backup branch. The custom domain remains assigned to the same repository; no DNS or email-record changes are part of this rollout. Separate review deployments must still use noindex settings.
 
 ## What gets hosted
 
@@ -61,16 +61,16 @@ Only enable indexing when the correct published URL and its relationship to the 
 
 The prepared `.github/workflows/pages.yml` uses `workflow_dispatch`: publishing is a deliberate manual action rather than an automatic consequence of every push. Do not run it until the target repository and publication are approved.
 
-1. After confirming eligibility, choose an approved **separate public repository** for this source. Do not overwrite the old live website repository. Make the workflow available on the repository's default branch so GitHub can show its manual Run workflow control.
+1. The authorised production repository is `infofireballstudios-369/fireball-studios-website`. Preserve `archive/live-before-static-20261109` and the old commit history. New source must be integrated without force-pushing or resetting history. The Pages workflow must exist on `main` before it can be dispatched.
 2. In that repository, open **Settings → Pages** and select **GitHub Actions** as the publishing source.
-3. Leave the repository Actions variable `FIREBALL_INDEXING_ENABLED` unset or set to `false` during review. The workflow defaults to `NOINDEX=true`. Only an exact value of `true` enables indexing by setting `NOINDEX=false`.
+3. Set `FIREBALL_INDEXING_ENABLED=true` for the authorised public launch. Keep it false or unset for isolated reviews. Only the exact value `true` enables indexing. `FORM_PROVIDER=formsubmit` uses the fixed notification recipient and needs mailbox activation.
 4. Open **Actions**, select the Pages workflow, choose the approved branch and run it manually. It uses Node.js 24, installs from the lockfile, builds and uploads `dist/`, then deploys the Pages artifact.
 5. The workflow obtains `SITE_URL` from the `actions/configure-pages` step's `base_url` output. This gives metadata the actual Pages address, including a project-repository path. No deployment token should be pasted into source or chat; the workflow uses GitHub's scoped workflow token and Pages permissions.
-6. Review the workflow result and the resulting Pages URL. Check Home, each hub, a nested project, a nested article, image paths, the 404, noindex metadata and the empty review sitemap. Check media and contact behaviour in a real browser.
+6. Review the workflow result and https://fireballstudios.co.uk/. Check Home, every hub, nested pages, legacy redirects, responsive images, the real 404 response, indexable primary metadata and 18 sitemap URLs. Check media and contact behaviour in a real browser. Isolated previews should instead stay noindex with an empty sitemap.
 
 GitHub's Pages workflow uses `configure-pages`, `upload-pages-artifact` and `deploy-pages`, with a `github-pages` deployment environment and appropriate `pages: write` / `id-token: write` permissions. [GitHub custom Pages workflows](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages).
 
-The project ships without a `CNAME`. Leave the custom-domain field empty for the isolated Pages site. Connecting `fireballstudios.co.uk` later is a separate launch decision involving the current hosting, DNS, email records, redirects and rollback; it is not part of this local preparation.
+Production includes `public/CNAME` containing the existing `fireballstudios.co.uk` assignment. GitHub Pages settings remain the source of truth for the custom domain. Preserve HTTPS enforcement. Do not remove the domain assignment or change DNS as part of a routine build. A separate review repository must not claim the production domain.
 
 ## After publication
 

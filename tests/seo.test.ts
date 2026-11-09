@@ -8,6 +8,7 @@ import { faqs, industries } from "../src/data/content.ts";
 import { buildPages } from "../src/templates/pages.ts";
 import { readBuildConfig, canonicalUrl } from "../src/lib/build-config.ts";
 import { getBusinessSchema } from "../src/lib/schema.ts";
+import { legacyRoutes, getLegacyRoute } from "../src/data/legacyRoutes.ts";
 
 const siteUrl = "https://example.test/fireball-static/";
 const pages = buildPages(readBuildConfig({ SITE_URL: siteUrl, NOINDEX: "false" }, false));
@@ -19,13 +20,14 @@ const page = (route: string) => {
 const documentFor = (route: string) => parseHTML(`<html><body>${page(route).body}</body></html>`).document;
 const text = (value: string | null | undefined) => (value ?? "").replace(/\s+/g, " ").trim();
 
-test("every existing route has one intentional metadata entry and uses it", () => {
-  assert.equal(pages.length, 20);
+test("every editorial route has intentional topic metadata while legacy redirects stay outside the keyword map", () => {
+  assert.equal(pages.length, 20 + legacyRoutes.length);
   assert.equal(seoPages.length, 20);
-  assert.deepEqual(new Set(seoPages.map((entry) => entry.route)), new Set(pages.map((entry) => entry.route)));
+  const editorialPages = pages.filter((entry) => !getLegacyRoute(entry.route));
+  assert.deepEqual(new Set(seoPages.map((entry) => entry.route)), new Set(editorialPages.map((entry) => entry.route)));
   assert.equal(new Set(seoPages.map((entry) => entry.title)).size, seoPages.length);
   assert.equal(new Set(seoPages.map((entry) => entry.description)).size, seoPages.length);
-  for (const entry of pages) {
+  for (const entry of editorialPages) {
     const seo = getPageSeo(entry.route);
     assert.equal(entry.seoTitle, seo.title);
     assert.equal(entry.seoDescription, seo.description);

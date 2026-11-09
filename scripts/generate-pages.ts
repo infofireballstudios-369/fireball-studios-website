@@ -6,6 +6,7 @@ import { navbar, footer, filmDialog, escapeHtml as e } from "../src/templates/ui
 import { getBusinessSchema, serialiseSchema } from "../src/lib/schema";
 import { getPageCsp } from "../src/lib/security";
 import { readBuildConfig, pagePrefix, canonicalUrl } from "../src/lib/build-config";
+import { getLegacyRoute } from "../src/data/legacyRoutes";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const config = readBuildConfig();
@@ -15,12 +16,15 @@ if (packageInfo.name !== "fireball-studios-static") throw new Error("Refusing to
 const brandData = "data:image/webp;base64," + (await readFile(join(root, "public/brand/fireball-mark.webp"))).toString("base64");
 
 function pageCanonical(page: StaticPage): string {
-  return page.redirect ? new URL(page.redirect, canonicalUrl(page.route, config.siteUrl)).href : canonicalUrl(page.file ?? page.route, config.siteUrl);
+  const url = page.redirect ? new URL(page.redirect, canonicalUrl(page.route, config.siteUrl)) : new URL(canonicalUrl(page.file ?? page.route, config.siteUrl));
+  // A redirect may retain a useful section anchor; canonical URLs identify the page itself.
+  url.hash = "";
+  return url.href;
 }
 
 function document(page: StaticPage): string {
   const missing = page.file === "404.html";
-  const prefix = missing ? "./" : pagePrefix(page.route);
+  const prefix = page.file ? "./" : pagePrefix(page.route);
   const canonical = pageCanonical(page);
   const noIndex = config.noIndex || page.noIndex;
   const title = (page.seoTitle ?? page.title) + " | Fireball Studios";
@@ -51,7 +55,10 @@ ${missing ? "" : footer(prefix) + filmDialog() + `<script type="module" src="${p
 const routes = [];
 for (const page of pages) {
   if (!page.file && !/^(?:[a-z0-9]+(?:-[a-z0-9]+)*\/)*$/.test(page.route)) throw new Error("A generated route is not a safe relative path.");
-  if (page.file && page.file !== "404.html") throw new Error("Unexpected root document override.");
+  if (page.file && page.file !== "404.html") {
+    const legacy = getLegacyRoute(page.file);
+    if (!legacy || page.route !== legacy.file || !page.noIndex || page.redirect !== "./" + legacy.target) throw new Error("Unexpected root document override.");
+  }
   const file = page.file || (page.route + "index.html");
   const target = join(root, file);
   await mkdir(dirname(target), { recursive: true });
