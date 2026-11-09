@@ -1,0 +1,22 @@
+node_modules/
+dist/
+.generated/
+.archive/
+.env*
+!.env.example
+.DS_Store
+*.log
+
+# Generated HTML entry points and discovery files
+/index.html
+/404.html
+/projects/
+/industries/
+/about/
+/blog/
+/contact/
+/privacy/
+/terms/
+/public/robots.txt
+/public/sitemap.xml
+/public/.nojekyll
