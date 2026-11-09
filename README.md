@@ -37,9 +37,9 @@ There are 20 generated page documents, including 18 primary pages, the404 and th
 
 ## Contact behaviour
 
-The contact form prepares a **mailto draft to info@fireballstudios.co.uk**. The visitor reviews and sends it in their own email app. The website does not deliver or store the enquiry and never claims confirmed sending. If no email app opens, use the visible email link or copy the brief into webmail. No API keys or mailbox passwords are needed.
+The default form sends visitors to **FormSubmit**, a free hosted form service requiring no account. It forwards the four enquiry fields to **info@fireballstudios.co.uk** after recipient activation and its spam check. The provider’s default CAPTCHA stays enabled; no provider script loads in the website. Local validation, direct email and copy-brief alternatives remain available.
 
-A hosted form service could be added later if requested and configured; none is enabled or silently assumed here.
+**Activation and inbox delivery are not yet verified.** Follow [CONTACT_SETUP.md](docs/CONTACT_SETUP.md): submit a labelled test from the contact page, activate the confirmation email, then check a second test in the mailbox. No email provider, mailbox password or API key is embedded in the site. Optional Formspree and draft-only modes are documented there.
 
 ## Static hosting and indexing
 
@@ -59,6 +59,9 @@ GitHub's current Pages terms restrict using it to run an online business, e-comm
 
 ## Editing and review
 
+- [SEO, topic/keyword map and launch guidance](docs/SEO_GUIDE.md)
+- [Contact activation and provider options](docs/CONTACT_SETUP.md)
+- [Native media quality and bandwidth budgets](docs/MEDIA_QUALITY.md)
 - [File and editing guide](docs/PROJECT_GUIDE.md)
 - [Deployment, indexing and hosting limits](docs/DEPLOYMENT.md)
 - [Media provenance and model/font credits](docs/ASSET_CREDITS.md)

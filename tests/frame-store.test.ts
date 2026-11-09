@@ -5,7 +5,7 @@ import { createFrameStore } from "../src/lib/frame-store";
 const tick = () => new Promise<void>((resolve) => setImmediate(resolve));
 const paths = Array.from({ length: 64 }, (_, index) => String(index));
 
-function controlledDecodes(t: TestContext, immediate = false) {
+function controlledDecodes(t: TestContext, immediate = false, dimensions = { width: 1280, height: 720 }) {
   const originalFetch = globalThis.fetch;
   const originalBitmap = globalThis.createImageBitmap;
   const started: number[] = [];
@@ -18,7 +18,7 @@ function controlledDecodes(t: TestContext, immediate = false) {
     const index = Number(await (source as Blob).text());
     started.push(index);
     peak = Math.max(peak, ++active);
-    const bitmap = { width: 1280, height: 720, close: () => closed.push(index) } as unknown as ImageBitmap;
+    const bitmap = { ...dimensions, close: () => closed.push(index) } as unknown as ImageBitmap;
     if (immediate) { active--; return bitmap; }
     return new Promise<ImageBitmap>((resolve) => {
       completions.set(index, () => {
@@ -188,4 +188,46 @@ test("invalid indices do not request the page or a fabricated frame", async (t) 
   t.after(() => store.dispose());
   for (const index of [-1, 64, 1.5, NaN, Infinity]) assert.equal(await store.get(index, true), null);
   assert.equal(requests, 0);
+});
+
+test("HD frames evict by decoded pixel memory while retaining the current frame", async (t) => {
+  const mock = controlledDecodes(t, true, { width: 2560, height: 1440 });
+  const store = createFrameStore(paths, new AbortController().signal, 12, { maxDecodedBytes: 48 * 1024 * 1024 });
+  t.after(() => store.dispose());
+  assert.ok(await store.get(0, true));
+  for (const index of [1, 2, 3, 4]) await store.get(index);
+  assert.deepEqual(mock.closed, [1, 2], "48 MiB retains three 2560×1440 frames, not twelve");
+  assert.equal(store.nearest(0)?.index, 0);
+  assert.equal(store.nearest(4)?.index, 4);
+  store.dispose();
+  assert.deepEqual(mock.closed.sort((a, b) => a - b), [0, 1, 2, 3, 4]);
+});
+
+test("a frame larger than the entire pixel budget is released instead of exceeding it", async (t) => {
+  const mock = controlledDecodes(t, true, { width: 3840, height: 2160 });
+  const store = createFrameStore(paths, new AbortController().signal, 12, { maxDecodedBytes: 24 * 1024 * 1024 });
+  t.after(() => store.dispose());
+  assert.equal(await store.get(0, true), null);
+  assert.equal(store.nearest(0), null);
+  assert.deepEqual(mock.closed, [0]);
+});
+
+test("UHD decoding reserves memory first and releases the previous bitmap before allocating another", async (t) => {
+  const mock = controlledDecodes(t, false, { width: 3840, height: 2160 });
+  const store = createFrameStore(paths, new AbortController().signal, 1, {
+    maxDecodedBytes: 48 * 1024 * 1024, expectedFrameBytes: 3840 * 2160 * 4, decodeConcurrency: 1,
+  });
+  t.after(() => store.dispose());
+  const first = store.get(0, true);
+  await tick();
+  mock.finish(0);
+  assert.ok(await first);
+  const next = store.get(1, true);
+  await tick();
+  assert.deepEqual(mock.closed, [0], "the old 4K bitmap must be released before its successor decodes");
+  assert.deepEqual(mock.started, [0, 1]);
+  assert.equal(mock.peak(), 1);
+  mock.finish(1);
+  assert.ok(await next);
+  assert.equal(store.nearest(1)?.index, 1);
 });

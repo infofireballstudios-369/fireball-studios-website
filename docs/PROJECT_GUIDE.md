@@ -46,7 +46,7 @@ Optionally copy `.env.example` to `.env` to set `SITE_URL` and `NOINDEX` for loc
 | Navigation and project filtering | [src/components/navigation.ts](../src/components/navigation.ts), [src/components/filters.ts](../src/components/filters.ts) |
 | Gallery selections, Vimeo and configurator launch/close behaviour | [src/components/gallery.ts](../src/components/gallery.ts), [src/components/media.ts](../src/components/media.ts) |
 | Scroll storytelling and bounded frame loading | [src/components/scroll-story.ts](../src/components/scroll-story.ts), [src/lib/frame-store.ts](../src/lib/frame-store.ts) |
-| Contact validation, email draft and copy-brief fallback | [src/components/contact.ts](../src/components/contact.ts) |
+| Contact validation, hosted submission, email and copy-brief fallback | [src/components/contact.ts](../src/components/contact.ts) |
 | Client initialisation | [src/main.ts](../src/main.ts) |
 
 Edit these source files instead of generated `index.html` files or `dist/`. After changing data or templates, run `npm run generate` and reload, or restart `npm run dev`; generation runs when the development command starts. CSS and client-code changes use Vite's normal development reload.
@@ -71,13 +71,11 @@ The prepared viewer is `public/experiences/car/fireball-car-configurator2.html`.
 
 Ordinary content edits need only the media already included here. `npm run prepare:assets` is a separate import operation requiring the original Projects archive and a read-only copy of the previous site's prepared assets. Its `--projects` and `--live` arguments identify those sources. Do not run it casually or point the destination at either source. `public/media-manifest.json` records origin paths, transformations, dimensions, sizes and hashes.
 
-## Contact is an email draft, not a delivery service
+## Contact delivery and activation
 
-The four fields are name, phone, email and project description. After validation, the form opens a `mailto:` draft addressed to `info@fireballstudios.co.uk`. The visitor must review and send it in their email application. Opening the draft does not confirm delivery or create a booking.
+The four fields are name, phone, email and project description. Default `FORM_PROVIDER=formsubmit` uses a native POST to `https://formsubmit.co/info@fireballstudios.co.uk`, keeping the provider’s security challenge. No provider JavaScript or email credential is loaded. The recipient must activate the form through their mailbox; test actual receipt before claiming it works. See [CONTACT_SETUP.md](CONTACT_SETUP.md).
 
-The static site has no contact API, email provider, database or visitor accounts. It does not save briefs on a server or install GA4. If no mail application opens, visitors can use the direct email link or copy their brief; the form retains their text in the current page.
-
-A hosted form endpoint, such as Formspree, could be added if the owner later chooses a provider. That would be a new integration requiring an actual configured endpoint, privacy updates, failure handling and end-to-end delivery verification. No such service is configured now, and no API key belongs in browser code.
+`FORM_PROVIDER=formspree` plus a verified `FORMSPREE_ENDPOINT` enables asynchronous sending and provider-acceptance status. `FORM_PROVIDER=email` retains the draft-only behaviour. All modes keep direct-email and copy-brief alternatives. The static site has no server API or database; a hosted provider processes submitted information as described in the privacy page.
 
 ## Content and verification
 
@@ -85,4 +83,13 @@ Use standard UK English and describe the studio's 3D visualisation work accurate
 
 Run the checks above after changes. Automated checks cover data/asset consistency, local links and generated output, plus relevant component behaviour. They do not replace a visual browser review. The browser host was unavailable during preparation, so actual desktop/mobile layouts, touch interaction, Vimeo playback and WebGL operation still need review.
 
-Before publishing, test keyboard navigation, focus return after closing media, all category filters, forward/reverse scrolling, reduced motion, slow or blocked media, form validation, the email draft and copy fallback. Follow [DEPLOYMENT.md](DEPLOYMENT.md) for hosting eligibility, manual publication and indexing settings.
+Before publishing, test keyboard navigation, focus return after closing media, all category filters, forward/reverse scrolling, reduced motion, slow or blocked media, form validation, the hosted submission, activation and email/copy fallbacks. Follow [DEPLOYMENT.md](DEPLOYMENT.md) for hosting eligibility, manual publication and indexing settings.
+
+## Where the latest improvements live
+
+- [src/data/seo.ts](../src/data/seo.ts): one intentional topic, related terms, questions, search metadata and contextual links per route.
+- [docs/SEO_GUIDE.md](SEO_GUIDE.md): editing and launch checks; search rankings cannot be guaranteed.
+- [src/components/header-size.ts](../src/components/header-size.ts): measures the real masthead so the hero clears the logo.
+- [src/lib/form-endpoint.ts](../src/lib/form-endpoint.ts) and [send-enquiry.ts](../src/lib/send-enquiry.ts): approved provider destinations and optional Formspree transport.
+- [docs/MEDIA_QUALITY.md](MEDIA_QUALITY.md): source resolutions, adaptive quality, cache limits and transfer budgets.
+- [scripts/prepare-quality-assets.mjs](../scripts/prepare-quality-assets.mjs): optional original-source extraction; ordinary builds use shipped files.

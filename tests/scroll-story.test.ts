@@ -17,8 +17,9 @@ test("scroll mapping reaches every chapter endpoint and reverses without an off-
 });
 
 for (const mode of [
-  { name: "reduced motion", reduced: true, height: 900 },
-  { name: "a short viewport", reduced: false, height: 680 },
+  { name: "reduced motion", reduced: true, height: 900, overflow: false },
+  { name: "a short viewport", reduced: false, height: 680, overflow: false },
+  { name: "copy larger than the available pinned area", reduced: false, height: 900, overflow: true },
 ]) {
   test(`${mode.name} keeps every semantic chapter available and requests no animation frames`, async (t) => {
     const { window, document } = parseHTML(`<html><body data-asset-base="../"><section data-story><div class="story-stage"><img data-story-poster src="../images/posters/3.webp"><canvas data-story-canvas></canvas><div class="story-copy-stack"><section data-story-chapter data-sequence="3"><h1>First chapter</h1></section><section data-story-chapter data-sequence="6"><h2>Second chapter</h2></section><section data-story-chapter data-sequence="5"><h2>Third chapter</h2></section></div><button data-story-target="0">First</button><span data-story-progress></span><p data-story-loading>Preparing the view</p></div></section></body></html>`);
@@ -48,6 +49,17 @@ for (const mode of [
       }),
     });
     Object.defineProperty(document.querySelector("canvas"), "getContext", { value: () => ({ clearRect() {} }) });
+    if (mode.overflow) {
+      Object.defineProperty(document.querySelector(".story-copy-stack"), "clientHeight", { value: 450 });
+      for (const chapter of document.querySelectorAll("[data-story-chapter]")) {
+        const copy = document.createElement("div");
+        copy.className = "story-copy";
+        copy.append(...chapter.childNodes);
+        chapter.append(copy);
+        Object.defineProperty(copy, "scrollHeight", { value: 640 });
+        Object.defineProperty(copy, "getBoundingClientRect", { value: () => ({ height: 640 }) });
+      }
+    }
     const cleanup = await initScrollStory();
     assert.equal(changeListeners.size, 1);
     for (const listener of changeListeners) listener();

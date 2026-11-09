@@ -15,6 +15,11 @@ if (root === live || root === projects) throw new Error("The destination must be
 const publicDirectory = join(root, "public");
 const hash = (bytes) => createHash("sha256").update(bytes).digest("hex");
 const manifest = { version: 1, brand: null, galleries: {}, posters: [], sequences: {}, configurator: null };
+// Re-importing the base library must not discard separately prepared native-resolution provenance.
+try {
+  const previous = JSON.parse(await readFile(join(publicDirectory, "media-manifest.json"), "utf8"));
+  if (previous.quality) manifest.quality = previous.quality;
+} catch (error) { if (error.code !== "ENOENT") throw error; }
 
 async function record(file, source, operation = "Copied without alteration") {
   const bytes = await readFile(join(publicDirectory, file));

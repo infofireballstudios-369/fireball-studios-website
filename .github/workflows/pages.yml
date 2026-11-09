@@ -35,6 +35,8 @@ jobs:
         run: npm run build
         env:
           SITE_URL: ${{ steps.pages.outputs.base_url }}
+          FORM_PROVIDER: ${{ vars.FORM_PROVIDER || 'formsubmit' }}
+          FORMSPREE_ENDPOINT: ${{ vars.FORMSPREE_ENDPOINT }}
           NOINDEX: ${{ vars.FIREBALL_INDEXING_ENABLED == 'true' && 'false' || 'true' }}
       - run: npm run check:pages
       - uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4

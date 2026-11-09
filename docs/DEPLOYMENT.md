@@ -4,9 +4,9 @@ This guide applies only to `/Users/hc/Documents/Fireball/fireball-gh-pages`. The
 
 ## Confirm GitHub Pages suitability first
 
-GitHub Pages is available with GitHub Free for public repositories. Its current terms restrict using Pages as free hosting to run an online business, e-commerce site or commercial SaaS. This build is an informational portfolio without checkout, accounts or server-stored enquiry data, but that does not itself establish eligibility for a studio business. Confirm the intended use is permitted before publishing; do not treat this guide as a guarantee of eligibility. [GitHub Pages limits and permitted use](https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits).
+GitHub Pages is available with GitHub Free for public repositories. Its current terms restrict using Pages as free hosting to run an online business, e-commerce site or commercial SaaS. This build is an informational portfolio without checkout or visitor accounts (its contact provider processes submitted enquiries), but that does not itself establish eligibility for a studio business. Confirm the intended use is permitted before publishing; do not treat this guide as a guarantee of eligibility. [GitHub Pages limits and permitted use](https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits).
 
-The published-site limit is 1 GB and the bandwidth allowance is a soft 100 GB per month, not unlimited traffic. The current local build is approximately 19.8 MB; its size is well below the site limit, but downloads, repeat visits and bots still consume bandwidth. There is no guaranteed visitor capacity. [GitHub Pages limits](https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits).
+The published-site limit is 1 GB and the bandwidth allowance is a soft 100 GB per month, not unlimited traffic. The revised local build is approximately 135 MB, including all optional native-resolution frame tiers; its size is well below the site limit, but downloads, repeat visits and bots still consume bandwidth. There is no guaranteed visitor capacity. [GitHub Pages limits](https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits).
 
 Keep the publication separate from the existing live repository/site until a replacement is explicitly approved. Do not add a `CNAME`, configure a custom domain or change DNS as part of an isolated review deployment.
 
@@ -30,16 +30,18 @@ npm run preview
 
 Inspect `http://127.0.0.1:4175/`. A build generates 20 page documents, runs TypeScript and checks local output. Review actual desktop and mobile browsers, keyboard controls, films, the configurator and the contact flow before treating the release as verified. Those browser checks remain outstanding because the browser host was unavailable during preparation.
 
-There is no server-side form or email-delivery setup. The contact form validates four fields and opens a draft in the visitor's own mail application. The visitor must send it. Test the draft and copy-brief fallback without claiming that the website delivered a message. A future hosted-form provider would need a separate, deliberately configured integration.
+The default form uses the free, no-account FormSubmit service. Activate notifications to info@fireballstudios.co.uk and confirm a labelled test arrives before publication; see [CONTACT_SETUP.md](CONTACT_SETUP.md). The provider’s spam challenge stays enabled. A static build cannot prove mailbox delivery. No private email key should be added to the website.
 
 ## URL and indexing settings
 
-[.env.example](../.env.example) documents two public build settings:
+[.env.example](../.env.example) documents public build settings:
 
 | Setting | Meaning |
 | --- | --- |
 | `SITE_URL` | Absolute canonical website URL, including the repository path and trailing slash where applicable |
 | `NOINDEX` | Indexing stays disabled unless its value is exactly `false` |
+| `FORM_PROVIDER` | `formsubmit` (default), `formspree` or `email` |
+| `FORMSPREE_ENDPOINT` | Optional verified public endpoint, used with `formspree` |
 
 The default example is `SITE_URL=https://fireballstudios.co.uk/` with `NOINDEX=true`. This keeps an isolated copy out of search while the existing website remains live. `SITE_URL` affects canonicals, social URLs, structured data and the sitemap; relative navigation and assets use the renderer's page-depth helpers.
 
@@ -77,3 +79,7 @@ Use the host's actual reported URL and inspect the deployed output rather than a
 If indexing is later approved, set `FIREBALL_INDEXING_ENABLED=true`, rerun the workflow and verify the canonical URL, populated sitemap and indexable metadata. Submit the correct sitemap through Search Console or Bing Webmaster Tools only for the intended public site. No search ranking or indexing result is guaranteed.
 
 This standalone version installs no Google Analytics or advertising tracker. GitHub and media providers may still process network information needed to serve their services; see the site's privacy page and each provider's terms. Keep usage within current hosting limits and review eligibility again if adding commercial transactions, hosted software or sensitive data handling.
+
+## Higher-quality media and traffic
+
+The on-disk library contains several resolutions, but visitors request only the selected tier and nearby frames for the active chapter. See [MEDIA_QUALITY.md](MEDIA_QUALITY.md) for exact selection rules and measured bytes. A complete uncached home traversal is about 10.94 MB at 1280px, 28.38 MB at 1920px, 38.10 MB at 2560px or 59.49 MB at native 4K. At 5,000 complete uncached traversals, the Full HD and higher tiers exceed the 100 GB soft monthly allowance before other resources. Adaptive/progressive loading can reduce actual transfer but does not guarantee capacity. Nothing here enables a paid upgrade or changes hosting. Review real host usage and choose the media policy accordingly before publication.

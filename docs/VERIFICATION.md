@@ -1,29 +1,36 @@
-# Static build verification — 9 November 2026
+# Static revision verification — 9 November 2026
 
-## Automated checks
+Applies to the isolated project at `/Users/hc/Documents/Fireball/fireball-gh-pages`, review branch `codex/seo-quality-contact`. No publication, push, merge, domain or DNS changes were made.
 
-- `npm install`: successful, locked dependencies installed; no backend services are needed.
-- `npm run dev`: Vite serves the homepage, projects hub, project detail, spaceship article, contact page, stylesheet and TypeScript module successfully.
-- TypeScript: passes.
-- `npm test`: 37 tests pass, covering project/industry mappings, schemas, contact validation and encoded drafts, deferred iframe mounting, checked lifecycle cleanup, frame-cache bounds/recovery, all 384decodable frames, provenance, forward/reverse mapping, reduced motion and short viewports.
-- `npm run build`: generates 20 page documents and valid static output, approximately 19.8 MB. The build checker verifies 482 local link references, 109 image elements, 20 JSON-LD blocks, complete frames, relative repository-prefix paths and zero initial video/iframe elements.
-- An indexable build with `SITE_URL=https://example.github.io/fireball-gh-pages/ NOINDEX=false` passes. Default preview builds remain noindex.
-- `npm run check:pages`: HTTP checks pass at `/` and `/test-repository/`, each covering 20 documents, 38 page/link targets, 22 asset references, local font URLs and the genuine 404 response.
-- All six supplied Vimeo films returned HTTP 200 oEmbed metadata with the expected video identifiers. This does not prove browser playback or account-specific embed permissions.
-- Dependency audit: no known vulnerabilities reported.
+## Completed checks
 
-The configurator retains the original model data, author/source/licence notices, checked lifecycle bridge and static-host CSP. Its executable inline scripts are checked against the CSP hashes. The gallery contains genuine selected originals or documented WebP derivatives; animation frames are never used as portfolio photographs.
+- `npm run type-check`: passes.
+- `npm audit --audit-level=moderate`: zero known vulnerabilities reported.
+- `npm run dev -- --port 5176`: starts successfully; HTTP checks return 200 for the homepage, projects hub, residence detail, concept article and contact page, plus a native 4K WebP. Port 5175 was already occupied and was left untouched. Local review: `http://127.0.0.1:5176/`.
+- `npm test`: **62 tests pass**. Coverage includes project/industry mappings, semantic SEO content and topic metadata, contact validation and provider transport/state, header measurement and cleanup, deferred media lifecycle, native-source quality provenance, bounded decoding, forward/reverse mapping, reduced motion and cramped-view text fallbacks.
+- `npm run build`: passes in the actual standalone directory. Generates 20 documents and approximately **135.37 MB** of static files, including all optional quality tiers. Build audit verifies 516 local link references, 1,071 local asset references, 59 fragment references, 10 responsive image candidates, 109 image elements and 20 JSON-LD blocks. Original 384 frames remain valid; another 672 native-source derivatives and eight posters have recorded hashes and dimensions. Initial pages contain no active iframe/video or backend references.
+- `npm run check:pages`: passes at `/` and `/test-repository/`, each covering 20 documents, 38 linked page targets, 46 asset targets, 51 valid fragments, 10 responsive candidates, seven font/style assets and a real 404 response. Checks do not submit forms or request external providers.
+- An indexable repository-prefix build using `SITE_URL=https://example.test/fireball-static/ NOINDEX=false` passes metadata/sitemap validation with 18 indexable canonical URLs. Optional Formspree configuration was checked using a public example endpoint without sending data. Final output is restored to the default **noindex** review build and FormSubmit mode.
+- The original Vimeo mappings and configurator remain unchanged; previous oEmbed checks returned the expected six film identifiers. This is not a new real-browser playback check.
 
-## Project isolation
+The hero now reserves the measured masthead height and a clear gap. Chapter copy is never vertically centred into the header. Height-aware typography and actual text-fit checks restore the readable static story when a pinned chapter cannot fit. Unit/DOM checks support this behaviour; they are not a visual review.
 
-The Next.js project and original media libraries are read-only references. The final SHA-256/content/modification-time comparison matches all 765 non-cache source/media files (496,221,248 bytes) against the pre-build snapshot, with zero changes. The original Git status is also unchanged: only the pre-existing untracked `.vscode/` folder is present. Dependency/build caches and Git internals were excluded from the file snapshot; no build or write operation was run against that project. Existing static starter files are preserved in `.archive/original-20261109/`, outside the published output and source control.
+## Enquiry delivery: activation required
 
-No existing repository was pushed or merged, no hosting project was changed, and no CNAME or domain/DNS setting was added. The included Pages workflow runs only when manually requested in this separate project's own repository.
+The default native form POST targets only `https://formsubmit.co/info@fireballstudios.co.uk`. It retains the provider’s default CAPTCHA and opens the provider’s security/confirmation flow. No account or private API key is needed. CSP allows that provider only on Contact; no provider script loads on initial pages. Optional Formspree and email-draft modes are explicit build settings.
 
-## Browser review still required
+Local tests cover validation, fixed action/recipient, error retention, duplicate-send protection, provider refusal, network failure, timeout and honest acceptance messages. **No live activation, completed CAPTCHA, accepted real submission or confirmed inbox receipt was performed.** Follow [CONTACT_SETUP.md](CONTACT_SETUP.md), activate the recipient and verify a labelled test reaches the mailbox before claiming delivery.
 
-The browser access host was unavailable. Automated DOM/HTTP tests are not a visual browser review. Before publication, review desktop/mobile appearance, keyboard focus, real forward/reverse scrolling, reduced motion, Vimeo playback and live WebGL controls. Verify Vimeo permits the chosen GitHub Pages hostname if account privacy settings restrict embedding.
+## Read-only project isolation
 
-The contact form intentionally opens an email draft and does not confirm sending or inbox receipt. Test it with the visitor's intended email application; the copy-brief and direct-email alternatives remain available if a mail handler is absent.
+A fresh before/after SHA-256, size and modification-time comparison matches all **765 non-cache source/media files (496,221,248 bytes)** in the Next.js reference project, with zero changes. Its Git status also matches the starting state, including the pre-existing untracked `.vscode/` folder. Dependency/build caches and Git internals were excluded. No build or write command ran against that project or the original media library.
 
-GitHub Pages' hosting restrictions and usage limits still apply; see DEPLOYMENT.md. Technical static compatibility does not establish business-hosting eligibility or unlimited availability.
+The static project's original archive remains preserved outside published output. All implementation and media derivatives belong to this separate repository.
+
+## Interactive review remains outstanding
+
+The browser access host was unavailable on both attempts. Real desktop/mobile layout, font enlargement, keyboard navigation, rapid forward/reverse scrolling, reduced motion, Vimeo playback and WebGL controls still require an interactive review. Native media endpoint/contact-sheet inspection confirms genuine source content, not browser rendering speed or GPU memory use.
+
+Native 4K sources preserve authentic recorded detail; no AI imagery or upscaling was introduced. Adaptive selection, one active chapter, progressive requests and pixel-budgeted decoding reduce unnecessary work. They do not guarantee traffic capacity: 5,000 complete uncached Full HD traversals are approximately 142 GB before other assets, exceeding GitHub Pages’ 100 GB soft monthly bandwidth allowance. See [MEDIA_QUALITY.md](MEDIA_QUALITY.md) and [DEPLOYMENT.md](DEPLOYMENT.md).
+
+Default preview indexing remains disabled until the intended publication URL is approved. The SEO/AEO work improves discoverability and useful answers; first-page positions and AI answer inclusion cannot be guaranteed. See [SEO_GUIDE.md](SEO_GUIDE.md).

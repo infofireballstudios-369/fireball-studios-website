@@ -8,6 +8,11 @@ export type DecodedFrame = {
 type FrameStoreOptions = {
   /** Bound stalled requests; a shorter value also permits deterministic network tests. */
   fetchTimeoutMs?: number;
+  /** Approximate RGBA memory retained after decoding; larger frames evict more neighbours. */
+  maxDecodedBytes?: number;
+  decodeConcurrency?: 1 | 2;
+  /** Known source dimensions let the scheduler reserve memory before decoding large frames. */
+  expectedFrameBytes?: number;
 };
 
 /** Fetch requested frames only, retaining a bounded cache of decoded images. */
@@ -15,6 +20,12 @@ export function createFrameStore(paths: string[], signal: AbortSignal, cacheSize
   if (!Number.isInteger(cacheSize) || cacheSize < 1) throw new RangeError("cacheSize must be a positive integer");
   const fetchTimeoutMs = options.fetchTimeoutMs ?? 8_000;
   if (!Number.isFinite(fetchTimeoutMs) || fetchTimeoutMs <= 0) throw new RangeError("fetchTimeoutMs must be positive and finite");
+  const maxDecodedBytes = options.maxDecodedBytes ?? 48 * 1024 * 1024;
+  if (!Number.isFinite(maxDecodedBytes) || maxDecodedBytes <= 0) throw new RangeError("maxDecodedBytes must be positive and finite");
+  const decodeConcurrency = options.decodeConcurrency ?? 2;
+  if (decodeConcurrency !== 1 && decodeConcurrency !== 2) throw new RangeError("decodeConcurrency must be one or two");
+  const expectedFrameBytes = options.expectedFrameBytes ?? 0;
+  if (!Number.isFinite(expectedFrameBytes) || expectedFrameBytes < 0 || expectedFrameBytes > maxDecodedBytes) throw new RangeError("expectedFrameBytes must fit within the decoded budget");
   const controller = new AbortController();
   const abort = () => controller.abort();
   if (signal.aborted) abort();
@@ -30,6 +41,16 @@ export function createFrameStore(paths: string[], signal: AbortSignal, cacheSize
   let decoding = 0;
   let priorityIndex = -1;
   let disposed = false;
+  let decodedBytes = 0;
+  let reservedBytes = 0;
+  const bytesFor = (frame: DecodedFrame) => frame.width * frame.height * 4;
+  const releaseFrame = (index: number) => {
+    const frame = decoded.get(index);
+    if (!frame) return;
+    decodedBytes -= bytesFor(frame);
+    frame.release();
+    decoded.delete(index);
+  };
 
   const fetchFrame = (index: number, retry = false): Promise<Blob | null> => {
     if (disposed || storeSignal.aborted) return Promise.resolve(null);
@@ -62,15 +83,30 @@ export function createFrameStore(paths: string[], signal: AbortSignal, cacheSize
       queued.clear();
       return;
     }
-    while (!disposed && !storeSignal.aborted && decoding < 2 && queued.size > 0) {
+    while (!disposed && !storeSignal.aborted && decoding < decodeConcurrency && queued.size > 0) {
       const candidates = [...queued.values()].reverse();
       const request = priorityIndex < 0 ? candidates[0] : candidates.reduce((nearest, candidate) =>
         Math.abs(candidate.index - priorityIndex) < Math.abs(nearest.index - priorityIndex) ? candidate : nearest);
       const { index } = request;
+      while (decodedBytes + reservedBytes + expectedFrameBytes > maxDecodedBytes) {
+        const oldest = [...decoded.keys()].find((key) => key !== priorityIndex);
+        if (oldest === undefined) break;
+        releaseFrame(oldest);
+      }
+      if (decodedBytes + reservedBytes + expectedFrameBytes > maxDecodedBytes) {
+        if (decoding > 0) return;
+        // A retained current frame can occupy the full budget; optional neighbours may be skipped.
+        queued.delete(index);
+        pending.delete(index);
+        request.resolve(null);
+        continue;
+      }
       queued.delete(index);
       decoding++;
+      reservedBytes += expectedFrameBytes;
       void decode(index).then((frame) => {
         decoding--;
+        reservedBytes -= expectedFrameBytes;
         pending.delete(index);
         request.resolve(frame);
         pump();
@@ -101,17 +137,17 @@ export function createFrameStore(paths: string[], signal: AbortSignal, cacheSize
             URL.revokeObjectURL(url);
           }
         }
-        if (disposed || storeSignal.aborted || (priorityIndex >= 0 && Math.abs(index - priorityIndex) > limit)) {
+        if (disposed || storeSignal.aborted || bytesFor(frame) > maxDecodedBytes || (priorityIndex >= 0 && Math.abs(index - priorityIndex) > limit)) {
           frame.release();
           return null;
         }
         decoded.set(index, frame);
-        while (decoded.size > limit) {
+        decodedBytes += bytesFor(frame);
+        while (decoded.size > limit || decodedBytes > maxDecodedBytes) {
           // Keep the requested frame even when older asynchronous work finishes afterwards.
           const oldest = [...decoded.keys()].find((key) => key !== priorityIndex);
           if (oldest === undefined) break;
-          decoded.get(oldest)?.release();
-          decoded.delete(oldest);
+          releaseFrame(oldest);
         }
         return decoded.has(index) ? frame : null;
       } catch {
@@ -176,6 +212,7 @@ export function createFrameStore(paths: string[], signal: AbortSignal, cacheSize
       controller.abort();
       decoded.forEach((frame) => frame.release());
       decoded.clear();
+      decodedBytes = 0;
       blobs.clear();
       fetchAttempts.clear();
       pending.forEach((request) => request.resolve(null));

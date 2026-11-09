@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 import { buildPages, type StaticPage } from "../src/templates/pages";
 import { navbar, footer, filmDialog, escapeHtml as e } from "../src/templates/ui";
 import { getBusinessSchema, serialiseSchema } from "../src/lib/schema";
+import { getPageCsp } from "../src/lib/security";
 import { readBuildConfig, pagePrefix, canonicalUrl } from "../src/lib/build-config";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
@@ -12,14 +13,19 @@ const pages = buildPages(config);
 const packageInfo = JSON.parse(await readFile(join(root, "package.json"), "utf8"));
 if (packageInfo.name !== "fireball-studios-static") throw new Error("Refusing to generate outside the standalone static project.");
 const brandData = "data:image/webp;base64," + (await readFile(join(root, "public/brand/fireball-mark.webp"))).toString("base64");
-const csp = ["default-src 'self'", "script-src 'self'", "style-src 'self' 'unsafe-inline'", "img-src 'self' data: blob:", "font-src 'self'", "frame-src 'self' https://player.vimeo.com", "connect-src 'self'" + (config.development ? " ws: wss:" : ""), "object-src 'none'", "base-uri 'none'", "form-action 'self' mailto:"].join("; ");
+
+function pageCanonical(page: StaticPage): string {
+  return page.redirect ? new URL(page.redirect, canonicalUrl(page.route, config.siteUrl)).href : canonicalUrl(page.file ?? page.route, config.siteUrl);
+}
 
 function document(page: StaticPage): string {
   const missing = page.file === "404.html";
   const prefix = missing ? "./" : pagePrefix(page.route);
-  const canonical = page.redirect ? new URL(page.redirect, canonicalUrl(page.route, config.siteUrl)).href : canonicalUrl(page.route, config.siteUrl);
+  const canonical = pageCanonical(page);
   const noIndex = config.noIndex || page.noIndex;
-  const title = page.title + " | Fireball Studios";
+  const title = (page.seoTitle ?? page.title) + " | Fireball Studios";
+  const description = page.seoDescription ?? page.description;
+  const csp = getPageCsp(config, page.route);
   const styles = missing ? `<style>body{margin:0;background:#0f1115;color:#f4f3ef;font:16px/1.8 system-ui,sans-serif}.container{max-width:1100px;margin:auto;padding:10vw 28px}.eyebrow{color:#efa84e;font-size:13px;letter-spacing:.1em;text-transform:uppercase}h1{font-size:clamp(48px,8vw,110px);line-height:1.05;letter-spacing:-.06em;font-weight:500}p{max-width:650px;color:#bfc5ce}a{color:inherit}.button{display:inline-flex;align-items:center;gap:40px;padding:14px 24px;background:#efa84e;color:#101318;text-decoration:none;border-radius:4px}.missing-brand{display:flex;align-items:center;gap:12px;padding:24px 28px;border-bottom:1px solid #fff2}.missing-brand img{width:27px;height:46px;object-fit:contain}.missing-brand span{font-size:28px;font-weight:600;letter-spacing:-.06em}svg{width:20px;height:20px}:focus-visible{outline:2px solid #efa84e;outline-offset:5px}</style>` : `<link rel="stylesheet" href="${prefix}src/styles/site.css">`;
   const schemas = [...getBusinessSchema(config.siteUrl), ...(page.schemas || [])];
   return `<!doctype html>
@@ -27,10 +33,10 @@ function document(page: StaticPage): string {
 <html lang="en-GB"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#0f1115">
 <meta http-equiv="Content-Security-Policy" content="${e(csp)}"><meta name="referrer" content="strict-origin-when-cross-origin">
-<title>${e(title)}</title><meta name="description" content="${e(page.description)}"><meta name="robots" content="${noIndex ? "noindex, nofollow, noimageindex" : "index, follow, max-image-preview:large"}">
+<title>${e(title)}</title><meta name="description" content="${e(description)}"><meta name="robots" content="${noIndex ? "noindex, nofollow, noimageindex" : "index, follow, max-image-preview:large"}">
 <link rel="canonical" href="${e(canonical)}"><link rel="icon" type="image/webp" href="${missing ? brandData : prefix + "brand/fireball-mark.webp"}">
-<meta property="og:type" content="${page.route.startsWith("blog/") && page.route !== "blog/" && !page.redirect ? "article" : "website"}"><meta property="og:locale" content="en_GB"><meta property="og:site_name" content="Fireball Studios"><meta property="og:title" content="${e(title)}"><meta property="og:description" content="${e(page.description)}"><meta property="og:url" content="${e(canonical)}"><meta property="og:image" content="${e(new URL(page.image, config.siteUrl).href)}">
-<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${e(title)}"><meta name="twitter:description" content="${e(page.description)}"><meta name="twitter:image" content="${e(new URL(page.image, config.siteUrl).href)}">
+<meta property="og:type" content="${page.route.startsWith("blog/") && page.route !== "blog/" && !page.redirect ? "article" : "website"}"><meta property="og:locale" content="en_GB"><meta property="og:site_name" content="Fireball Studios"><meta property="og:title" content="${e(title)}"><meta property="og:description" content="${e(description)}"><meta property="og:url" content="${e(canonical)}"><meta property="og:image" content="${e(new URL(page.image, config.siteUrl).href)}">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${e(title)}"><meta name="twitter:description" content="${e(description)}"><meta name="twitter:image" content="${e(new URL(page.image, config.siteUrl).href)}">
 ${page.redirect ? `<meta http-equiv="refresh" content="0; url=${e(page.redirect)}">` : ""}
 ${styles}
 <noscript><style>.site-header{position:relative}.page-header{padding-top:70px}.story-copy{padding-top:90px}.film-poster .play-disc{display:none}button[data-video-trigger]{display:none}</style></noscript>
@@ -50,7 +56,7 @@ for (const page of pages) {
   const target = join(root, file);
   await mkdir(dirname(target), { recursive: true });
   await writeFile(target, document(page));
-  routes.push({ route: page.route, file, canonical: canonicalUrl(page.route, config.siteUrl), title: page.title, indexable: !page.noIndex });
+  routes.push({ route: page.route, file, canonical: pageCanonical(page), title: (page.seoTitle ?? page.title) + " | Fireball Studios", description: page.seoDescription ?? page.description, indexable: !page.noIndex });
 }
 await mkdir(join(root, ".generated"), { recursive: true });
 await writeFile(join(root, ".generated/routes.json"), JSON.stringify(routes, null, 2) + "\n");

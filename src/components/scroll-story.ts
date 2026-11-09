@@ -1,4 +1,4 @@
-import { assetUrl, getFramePaths, getVimeoVideo, isSequenceId, sequenceConfigs, type SequenceId } from "../data/assetManifest";
+import { getFrameDimensions, getFramePaths, getSequencePoster, getVimeoVideo, isSequenceId, selectSequenceQuality, sequenceConfigs, type FrameQuality, type SequenceId } from "../data/assetManifest";
 import { createFrameStore } from "../lib/frame-store";
 import type { ScrollTrigger as ScrollTriggerInstance } from "gsap/ScrollTrigger";
 
@@ -8,6 +8,17 @@ export function getStoryPosition(progress: number, frameCounts: readonly number[
   const scaled = normalised * frameCounts.length;
   const chapter = Math.min(frameCounts.length - 1, Math.floor(scaled));
   return { chapter, frame: Math.round(Math.min(1, scaled - chapter) * (frameCounts[chapter] - 1)) };
+}
+
+/** Measure every chapter, including hidden chapters, before pinning its readable copy. */
+export function storyCopyFits(stack: HTMLElement | null, chapters: readonly HTMLElement[]): boolean {
+  if (!stack) return true;
+  const available = stack?.clientHeight ?? 0;
+  if (available <= 0) return false;
+  return chapters.every((chapter) => {
+    const copy = chapter.querySelector<HTMLElement>(".story-copy");
+    return !copy || Math.max(copy.scrollHeight, copy.getBoundingClientRect().height) <= available + 1;
+  });
 }
 
 /** Enhance the semantic story only when a usable frame and animation support are ready. */
@@ -24,16 +35,44 @@ export function initScrollStory(): Promise<() => void> {
   const base = document.body.dataset.assetBase ?? "./";
   const progress = story.querySelector<HTMLElement>("[data-story-progress]");
   const buttons = [...story.querySelectorAll<HTMLButtonElement>("[data-story-target]")];
+  const copyStack = story.querySelector<HTMLElement>(".story-copy-stack");
   const motion = window.matchMedia("(prefers-reduced-motion: reduce), (max-height: 680px)");
-  const originalPoster = { src: poster.getAttribute("src"), srcset: poster.getAttribute("srcset") };
+  const originalPoster = { src: poster.getAttribute("src"), srcset: poster.getAttribute("srcset"), sizes: poster.getAttribute("sizes") };
   const initialLoadingText = loading?.textContent || "Preparing the view…";
-  const stores = new Map<number, ReturnType<typeof createFrameStore>>();
+  const stores = new Map<number, ReturnType<typeof createFrameStore> & { quality: FrameQuality; neighbourRadius: number }>();
   let controller: AbortController | undefined;
   let trigger: ScrollTriggerInstance | undefined;
   let runtime: Promise<typeof import("gsap/ScrollTrigger")> | undefined;
   let active = 0, requested = 0, drawn = "", raf = 0, generation = 0;
   let started = false, enhanced = false, disposed = false, failed = false;
   let observer: IntersectionObserver | undefined;
+  let visible = typeof IntersectionObserver !== "function";
+  const connection = (window.navigator as Navigator & { connection?: EventTarget & { saveData?: boolean; effectiveType?: string } }).connection;
+  const qualityFor = (index: number) => selectSequenceQuality(chapters[index].id as SequenceId, {
+    viewportWidth: window.innerWidth, pixelRatio: window.devicePixelRatio,
+    saveData: connection?.saveData, effectiveType: connection?.effectiveType,
+  });
+  const setPoster = (index: number) => {
+    const image = getSequencePoster(chapters[index].id as SequenceId, base);
+    poster.srcset = image.srcset;
+    poster.sizes = image.sizes;
+    poster.src = image.src;
+  };
+
+  const fits = () => {
+    // Measure the final pinned geometry without waiting for, or downloading, a frame.
+    if (!enhanced) {
+      story.style.setProperty("--chapter-count", String(chapters.length));
+      story.classList.add("is-enhanced");
+      document.body.classList.add("is-enhanced");
+    }
+    const result = storyCopyFits(copyStack, nodes);
+    if (!enhanced) {
+      story.classList.remove("is-enhanced");
+      document.body.classList.remove("is-enhanced");
+    }
+    return result;
+  };
 
   const showLoading = (visible: boolean) => {
     if (loading) { loading.hidden = !visible; loading.textContent = initialLoadingText; }
@@ -63,8 +102,7 @@ export function initScrollStory(): Promise<() => void> {
   const fallback = (chapterIndex: number) => {
     failed = true;
     stop();
-    poster.src = assetUrl(sequenceConfigs[chapters[chapterIndex].id as SequenceId].poster, base);
-    poster.removeAttribute("srcset");
+    setPoster(chapterIndex);
     if (loading) {
       const link = document.createElement("a");
       link.href = getVimeoVideo(chapters[chapterIndex].id).watchUrl;
@@ -78,7 +116,14 @@ export function initScrollStory(): Promise<() => void> {
   const storeFor = (index: number) => {
     let store = stores.get(index);
     if (!store) {
-      store = createFrameStore(getFramePaths(chapters[index].id as SequenceId, base), controller!.signal, window.innerWidth < 700 ? 8 : 12);
+      const id = chapters[index].id as SequenceId;
+      const quality = qualityFor(index);
+      const dimensions = getFrameDimensions(id, quality);
+      const maxDecodedBytes = (window.innerWidth <= 900 ? 24 : 48) * 1024 * 1024;
+      const capacity = Math.max(1, Math.min(12, Math.floor(maxDecodedBytes / (dimensions.width * dimensions.height * 4))));
+      store = Object.assign(createFrameStore(getFramePaths(id, base, quality), controller!.signal, capacity, {
+        maxDecodedBytes, decodeConcurrency: quality === 3840 ? 1 : 2, expectedFrameBytes: dimensions.width * dimensions.height * 4,
+      }), { quality, neighbourRadius: Math.min(2, Math.floor((capacity - 1) / 2)) });
       stores.set(index, store);
     }
     return store;
@@ -88,7 +133,7 @@ export function initScrollStory(): Promise<() => void> {
     if (!enhanced || disposed || motion.matches) return;
     const available = stores.get(active)?.nearest(requested);
     if (!available) return;
-    const key = `${active}:${available.index}`;
+    const key = `${active}:${stores.get(active)?.quality}:${available.index}`;
     if (!force && key === drawn) return;
     const ratio = Math.min(window.devicePixelRatio || 1, 1.5);
     const width = Math.max(1, Math.round(canvas.clientWidth * ratio));
@@ -128,7 +173,9 @@ export function initScrollStory(): Promise<() => void> {
     };
     const requests = [store.get(frame, true).then(complete)];
     // A small local window supports smooth reversal without downloading the entire film.
-    for (const offset of [-2, -1, 1, 2]) requests.push(store.get(frame + offset).then(complete));
+    for (let offset = 1; offset <= store.neighbourRadius; offset++) {
+      requests.push(store.get(frame - offset).then(complete), store.get(frame + offset).then(complete));
+    }
     void Promise.all(requests).then((images) => {
       if (disposed || run !== generation || index !== active || requested !== frame || stores.get(index) !== store) return;
       if (!images.some(Boolean) && !store.nearest(frame)) fallback(index);
@@ -143,8 +190,7 @@ export function initScrollStory(): Promise<() => void> {
       drawn = "";
       context.clearRect(0, 0, canvas.width, canvas.height);
       for (const [key, store] of stores) if (key !== index) { stores.delete(key); store.dispose(); }
-      poster.src = assetUrl(sequenceConfigs[chapters[index].id as SequenceId].poster, base);
-      poster.removeAttribute("srcset");
+      setPoster(index);
       selectChapter(index);
       showLoading(true);
     }
@@ -154,7 +200,8 @@ export function initScrollStory(): Promise<() => void> {
     if (progress) progress.style.transform = `scaleX(${Math.max(0, Math.min(1, value))})`;
   };
   const start = async () => {
-    if (disposed || failed || started || motion.matches) return;
+    if (disposed || failed || started || motion.matches || !visible) return;
+    if (!fits()) { restoreCopy(); showLoading(false); return; }
     started = true;
     const run = ++generation;
     controller = new AbortController();
@@ -173,12 +220,17 @@ export function initScrollStory(): Promise<() => void> {
       story.style.setProperty("--chapter-count", String(chapters.length));
       story.classList.add("is-enhanced");
       document.body.classList.add("is-enhanced");
+      if (!fits()) { stop(); showLoading(false); return; }
       selectChapter(0);
       trigger = plugin.ScrollTrigger.create({ trigger: story, start: "top top", end: "bottom bottom", invalidateOnRefresh: true,
         onUpdate: (self) => update(self.progress), onRefresh: (self) => update(self.progress) });
       update(trigger.progress);
       draw(true);
-      void document.fonts?.ready.then(() => { if (!disposed && run === generation) trigger?.refresh(); });
+      void document.fonts?.ready.then(() => {
+        if (disposed || run !== generation) return;
+        if (!fits()) { stop(); showLoading(false); }
+        else trigger?.refresh();
+      });
     } catch { if (!disposed && run === generation) fallback(0); }
   };
   const sync = () => {
@@ -191,10 +243,29 @@ export function initScrollStory(): Promise<() => void> {
       window.scrollTo({ top: trigger.start + (trigger.end - trigger.start) * index / chapters.length + 1, behavior: "smooth" });
     }
   };
-  const resize = typeof ResizeObserver === "function" ? new ResizeObserver(() => draw(true)) : undefined;
-  const onResize = () => draw(true);
+  const onResize = () => {
+    if (disposed) return;
+    if (enhanced && !fits()) { stop(); showLoading(false); return; }
+    const current = stores.get(active);
+    if (enhanced && current && current.quality !== qualityFor(active)) {
+      current.dispose();
+      stores.delete(active);
+      drawn = "";
+      requestFrame(active, requested);
+    }
+    if (!started) sync();
+    else draw(true);
+  };
+  const resize = typeof ResizeObserver === "function" ? new ResizeObserver(onResize) : undefined;
   resize?.observe(canvas);
+  if (copyStack) resize?.observe(copyStack);
+  for (const { node } of chapters) {
+    const copy = node.querySelector<HTMLElement>(".story-copy");
+    if (copy) resize?.observe(copy);
+  }
   window.addEventListener("resize", onResize);
+  window.addEventListener("fireball:header-resize", onResize);
+  connection?.addEventListener("change", onResize);
   buttons.forEach((button) => button.addEventListener("click", onTarget));
   motion.addEventListener("change", sync);
   const onPageHide = () => stop();
@@ -204,7 +275,7 @@ export function initScrollStory(): Promise<() => void> {
   showLoading(false);
   if (typeof IntersectionObserver === "function") {
     observer = new IntersectionObserver((entries) => {
-      if (entries.some((entry) => entry.isIntersecting)) { observer?.disconnect(); sync(); }
+      if (entries.some((entry) => entry.isIntersecting)) { visible = true; observer?.disconnect(); sync(); }
     }, { rootMargin: "300px 0px" });
     observer.observe(story);
   } else sync();
@@ -216,6 +287,8 @@ export function initScrollStory(): Promise<() => void> {
     observer?.disconnect();
     resize?.disconnect();
     window.removeEventListener("resize", onResize);
+    window.removeEventListener("fireball:header-resize", onResize);
+    connection?.removeEventListener("change", onResize);
     window.removeEventListener("pagehide", onPageHide);
     window.removeEventListener("pageshow", onPageShow);
     motion.removeEventListener("change", sync);

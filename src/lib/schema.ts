@@ -36,6 +36,15 @@ export function getBusinessSchema(siteUrl: string): JsonLd[] {
   return [
     {
       "@context": "https://schema.org",
+      "@type": "WebSite",
+      "@id": url + "#website",
+      name: site.name,
+      url,
+      inLanguage: "en-GB",
+      publisher: { "@id": organisationId },
+    },
+    {
+      "@context": "https://schema.org",
       "@type": "Organization",
       "@id": organisationId,
       name: site.name,

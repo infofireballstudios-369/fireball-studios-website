@@ -169,7 +169,7 @@ test("about presents all six review stages in the agreed order", () => {
   assert.doesNotMatch(text(document.body.textContent), /five[- ](?:step|stage)/i);
 });
 
-test("contact exposes four labelled fields and describes an email draft instead of delivery", () => {
+test("contact exposes four labelled fields, hosted sending and direct-email alternatives", () => {
   const document = bodyDocument("contact/");
   const form = document.querySelector<HTMLFormElement>("[data-contact-form]");
   assert.ok(form);
@@ -179,8 +179,9 @@ test("contact exposes four labelled fields and describes an email draft instead 
     assert.ok(form.querySelector(`label[for="${field.id}"]`));
     assert.ok(form.querySelector(`[data-error-for="${field.name}"]`));
   }
-  assert.equal(form.getAttribute("action"), "mailto:info@fireballstudios.co.uk");
-  assert.match(text(form.querySelector(".form-help")?.textContent), /email draft.*send it in your email app.*does not submit or store/);
+  assert.equal(form.getAttribute("action"), "https://formsubmit.co/info@fireballstudios.co.uk");
+  assert.ok(form.hasAttribute("data-native-delivery"));
+  assert.match(text(form.querySelector(".form-help")?.textContent), /FormSubmit.*security check.*no email app/);
   assert.ok(form.querySelector("[data-email-draft]"));
   assert.ok(form.querySelector("[data-copy-brief]"));
 });
