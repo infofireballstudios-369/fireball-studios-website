@@ -68,3 +68,7 @@ The previous form and old website both used `https://formsubmit.co/info@fireball
 `FORM_PROVIDER=formsubmit` remains a legacy setting, with CAPTCHA retained; `formspree` requires a verified public `FORMSPREE_ENDPOINT`. `FORM_PROVIDER=email` opens a draft the visitor must send. Production uses the Netlify form and keeps direct-email/copy alternatives.
 
 [Netlify form setup](https://docs.netlify.com/manage/forms/setup/), [notification recipient confirmation](https://docs.netlify.com/manage/forms/notifications/), [spam handling](https://docs.netlify.com/manage/forms/spam-filters/), [Zoho quarantine](https://www.zoho.com/mail/help/adminconsole/spam-quarantine.html).
+
+## Latest verification record
+
+The GitHub contact-mode deployment and Netlify capture deployment are public. The recipient confirmation is verified. TypeScript, 78 tests, both builds and live 32-page/link checks pass. The last dashboard check had no verified test record; actual enquiry-email receipt is still awaiting the owner’s labelled CAPTCHA test. No agent-generated enquiry was sent, and no source or DNS changes were made to the original Next.js project.
