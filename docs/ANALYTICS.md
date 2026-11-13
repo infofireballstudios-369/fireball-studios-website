@@ -12,6 +12,14 @@ This static website uses basic consent mode: the Google tag stays unloaded until
 
 The measurement ID is public configuration. This integration does not need a Google API key, service-account file or private token. Keep account credentials out of the website and repository.
 
+## Publication record — 13 November 2026
+
+The owner requested connection of the live website. Implementation commit `1e466691d9417f4498034d5244d4cb090fab49e0` was published through the existing [successful GitHub Pages workflow](https://github.com/infofireballstudios-369/fireball-studios-website/actions/runs/43500384198). The production repository now supplies `GA_MEASUREMENT_ID=G-7RV5GM0GCF` and `ENABLE_ANALYTICS=true`; indexing and Netlify contact settings were preserved.
+
+Public HTTP checks verified all 32 documents, exactly 18 consent-enabled main pages, the correct stream/origin, an initial HTML payload without Google tag requests, and a JavaScript hash matching the release artifact. Redirects, the real 404 response and the unchanged Netlify enquiry host contain no Analytics integration. All 110 tests, TypeScript, production/disabled-preview builds, root/repository-prefix HTTP checks and the dependency audit pass. A fresh comparison confirmed all 766 non-cache files of the protected Next.js reference remained unchanged.
+
+These are installation and static delivery checks. The Google administration account and real-browser host were unavailable; actual tag execution, visual interaction and received GA4 Realtime events still require the owner's browser check below. No synthetic measurement events or test enquiries were sent.
+
 The owner confirmed that **Enhanced Measurement was switched off on 8 November 2026**. Keep it off at **Admin → Data streams → the web stream → Enhanced measurement** when maintaining the stream. The current preparation did not reinspect the Google account. Automatic measurement can collect search parameters, outbound links and form interactions; it would undermine the application's manual page-data restrictions. [Google’s enhanced measurement guide](https://support.google.com/analytics/answer/9216061)
 
 ## Build settings
