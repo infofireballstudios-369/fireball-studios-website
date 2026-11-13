@@ -1,4 +1,15 @@
-# Static revision verification — 9 November 2026
+# Static website verification
+
+## GA4 integration — 13 November 2026
+
+- The existing stream is `G-7RV5GM0GCF`, property `556950277`, account `410359815`. No new property, private key or Netlify form deployment is required. The owner previously confirmed Enhanced Measurement was off; account settings could not be inspected in this session.
+- `npm run type-check` and all **110 tests** pass. The analytics additions cover production eligibility, scoped CSP, consent controls, zero pre-consent transport, storage and tag failures, withdrawal/load races, cross-tab changes, expiry, safe page/referrer fields, MPA cookie continuity, duplicate initialisation and explicit BFCache returns. DOM tests use a simulated browser; they do not prove real Google event receipt.
+- `npm audit --audit-level=moderate` reports zero known vulnerabilities. Both the static website and the unchanged isolated contact capture build successfully. The capture artifact contains no GA measurement ID, Analytics tag or analytics integration.
+- The indexable production artifact has 32 documents and exactly 18 consent-enabled main pages. Its audit checks 738 local link references, 1,509 local asset references, 73 fragments, all 384 core animation frames and 18 sitemap URLs. Google scripts, connection hints and media players are absent from initial HTML. Redirects, errors and the configurator remain outside tracking.
+- Static HTTP checks pass at the domain root and `/test-repository/`: 32 documents, 50 linked page targets, 46 asset targets, 65 fragments, 10 responsive candidates, seven stylesheet/font assets and the native 404 response for each prefix.
+- The browser host and authenticated Analytics administration are unavailable. Real mobile/keyboard consent interactions, browser network/CSP execution and **GA4 Realtime receipt remain unverified**. See [ANALYTICS.md](ANALYTICS.md) for the real-browser acceptance, rejection, withdrawal and Realtime checks. The original Next.js project is read-only and is not part of this deployment.
+
+## Original preparation record — 9 November 2026
 
 This is the local preparation record. The later authorised production rollout and preserved old website are recorded in [LIVE_LAUNCH.md](LIVE_LAUNCH.md).
 

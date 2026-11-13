@@ -28,9 +28,9 @@ npm run build
 npm run preview
 ~~~
 
-Inspect `http://127.0.0.1:4175/`. A build generates 20 page documents, runs TypeScript and checks local output. Review actual desktop and mobile browsers, keyboard controls, films, the configurator and the contact flow before treating the release as verified. Those browser checks remain outstanding because the browser host was unavailable during preparation.
+Inspect `http://127.0.0.1:4175/`. A build generates 32 page documents, runs TypeScript and checks local output: 18 primary pages, two fallback documents and 12 legacy redirects. Review actual desktop and mobile browsers, keyboard controls, films, the configurator and the contact flow before treating the release as verified. Those browser checks remain outstanding because the browser host was unavailable during preparation.
 
-The default form uses the free, no-account FormSubmit service. Activate notifications to info@fireballstudios.co.uk and confirm a labelled test arrives before publication; see [CONTACT_SETUP.md](CONTACT_SETUP.md). The provider’s spam challenge stays enabled. A static build cannot prove mailbox delivery. No private email key should be added to the website.
+Production uses the isolated Netlify capture form. Keep CAPTCHA, dashboard storage and the confirmed info@fireballstudios.co.uk notification setting intact; see [CONTACT_SETUP.md](CONTACT_SETUP.md). A labelled human test must confirm capture and inbox receipt. The earlier FormSubmit success response did not establish delivery and is retained only as an explicit alternative. No private email key belongs in the static website.
 
 ## URL and indexing settings
 
@@ -40,8 +40,11 @@ The default form uses the free, no-account FormSubmit service. Activate notifica
 | --- | --- |
 | `SITE_URL` | Absolute canonical website URL, including the repository path and trailing slash where applicable |
 | `NOINDEX` | Indexing stays disabled unless its value is exactly `false` |
-| `FORM_PROVIDER` | `formsubmit` (default), `formspree` or `email` |
+| `FORM_PROVIDER` | `netlify` for production; explicit `formsubmit`, `formspree` or `email` alternatives |
 | `FORMSPREE_ENDPOINT` | Optional verified public endpoint, used with `formspree` |
+| `NETLIFY_FORM_URL` | Approved public capture URL, used with `netlify` |
+| `GA_MEASUREMENT_ID` | Public web measurement ID, currently `G-7RV5GM0GCF` |
+| `ENABLE_ANALYTICS` | Only exact `true` enables the eligible production consent integration |
 
 The default example is `SITE_URL=https://fireballstudios.co.uk/` with `NOINDEX=true`. This keeps an isolated copy out of search while the existing website remains live. `SITE_URL` affects canonicals, social URLs, structured data and the sitemap; relative navigation and assets use the renderer's page-depth helpers.
 
@@ -63,7 +66,7 @@ The prepared `.github/workflows/pages.yml` uses `workflow_dispatch`: publishing 
 
 1. The authorised production repository is `infofireballstudios-369/fireball-studios-website`. Preserve `archive/live-before-static-20261109` and the old commit history. New source must be integrated without force-pushing or resetting history. The Pages workflow must exist on `main` before it can be dispatched.
 2. In that repository, open **Settings → Pages** and select **GitHub Actions** as the publishing source.
-3. Set `FIREBALL_INDEXING_ENABLED=true` for the authorised public launch. Keep it false or unset for isolated reviews. Only the exact value `true` enables indexing. `FORM_PROVIDER=formsubmit` uses the fixed notification recipient and needs mailbox activation.
+3. Set `FIREBALL_INDEXING_ENABLED=true` for the authorised public site; keep it false or unset for isolated reviews. Production uses `FORM_PROVIDER=netlify` and the approved `NETLIFY_FORM_URL`. For optional GA4, set `GA_MEASUREMENT_ID=G-7RV5GM0GCF` and `ENABLE_ANALYTICS=true`; keep Enhanced Measurement off as previously confirmed by the owner. Non-brand/noindex/local builds remain ineligible. See [ANALYTICS.md](ANALYTICS.md).
 4. Open **Actions**, select the Pages workflow, choose the approved branch and run it manually. It uses Node.js 24, installs from the lockfile, builds and uploads `dist/`, then deploys the Pages artifact.
 5. The workflow obtains `SITE_URL` from the `actions/configure-pages` step's `base_url` output. This gives metadata the actual Pages address, including a project-repository path. No deployment token should be pasted into source or chat; the workflow uses GitHub's scoped workflow token and Pages permissions.
 6. Review the workflow result and https://fireballstudios.co.uk/. Check Home, every hub, nested pages, legacy redirects, responsive images, the real 404 response, indexable primary metadata and 18 sitemap URLs. Check media and contact behaviour in a real browser. Isolated previews should instead stay noindex with an empty sitemap.
@@ -78,7 +81,7 @@ Use the host's actual reported URL and inspect the deployed output rather than a
 
 If indexing is later approved, set `FIREBALL_INDEXING_ENABLED=true`, rerun the workflow and verify the canonical URL, populated sitemap and indexable metadata. Submit the correct sitemap through Search Console or Bing Webmaster Tools only for the intended public site. No search ranking or indexing result is guaranteed.
 
-This standalone version installs no Google Analytics or advertising tracker. GitHub and media providers may still process network information needed to serve their services; see the site's privacy page and each provider's terms. Keep usage within current hosting limits and review eligibility again if adding commercial transactions, hosted software or sensitive data handling.
+Optional GA4 is generated only for eligible primary production pages and loads its tag after visitor acceptance. Equal accept/reject controls and footer preferences manage a 90-day choice; advertising features stay disabled. Keep Enhanced Measurement off and use the existing public ID, not a private API key. Redirects, 404, viewer and enquiry capture do not initialise GA4. Netlify's Google reCAPTCHA may operate independently for form security. Verify live collection separately through the owner's Realtime view; see [ANALYTICS.md](ANALYTICS.md). GitHub and media providers still process service/network information. Keep usage within hosting limits and review eligibility again if adding commercial transactions, hosted software or sensitive data handling.
 
 ## Higher-quality media and traffic
 

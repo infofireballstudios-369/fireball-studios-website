@@ -99,7 +99,7 @@ async function totalBytes(directory) {
 export async function checkBuild() {
   const routes = JSON.parse(await readFile(join(root, ".generated/routes.json"), "utf8"));
   const pages = new Map(), markup = new Map(), failures = [];
-  let linkCount = 0, imageCount = 0, schemaCount = 0, fragmentCount = 0, srcsetCount = 0, assetCount = 0;
+  let linkCount = 0, imageCount = 0, schemaCount = 0, fragmentCount = 0, srcsetCount = 0, assetCount = 0, analyticsPages = 0;
   const requireOne = (all, tag, predicate, label) => {
     const found = all.filter((node) => node.tagName === tag && predicate(attrs(node)));
     assert.equal(found.length, 1, label);
@@ -118,6 +118,16 @@ export async function checkBuild() {
   const base = new URL(siteUrl);
   assert.ok(base.pathname.endsWith("/") && !base.search && !base.hash, "Homepage canonical must be a clean directory URL");
   assert.ok(base.protocol === "https:" || ["localhost", "127.0.0.1", "[::1]"].includes(base.hostname), "Public canonical URL must use HTTPS");
+  const analyticsNode = home.all.find((node) => attrs(node).id === "fireball-analytics-config");
+  const analytics = analyticsNode ? JSON.parse(text(analyticsNode)) : null;
+  if (analytics) {
+    assert.ok(["fireballstudios.co.uk", "www.fireballstudios.co.uk"].includes(base.hostname) && base.protocol === "https:" && !base.port, "Analytics only on approved production domains");
+    assert.match(analytics.measurementId, /^G-[A-Z0-9]{6,20}$/);
+    assert.equal(analytics.origin, base.origin);
+    const expectedRoutes = Object.fromEntries(routes.filter((route) => route.indexable).map((route) => [new URL(route.canonical).pathname.replace(/\/+$/, "") || "/", route.title]));
+    assert.deepEqual(analytics.routes, expectedRoutes, "Measurement titles and paths match static primary routes");
+    assert.equal(Object.keys(analytics.routes).length, 18);
+  }
   const syntheticOrigin = "https://static.example";
   const cachedFiles = new Map();
   const readTarget = async (candidate) => {
@@ -191,6 +201,26 @@ export async function checkBuild() {
     if (!route.indexable || refresh) assert.match(robots, /(?:^|[\s,])noindex(?:$|[\s,])/i, file + ": fallback and redirect stay noindex");
     if (route.indexable && !/\bnoindex\b/i.test(robots)) indexableCanonicals.push(canonical);
     if (route.indexable) allCanonicals.push(canonical);
+    const configs = all.filter((node) => attrs(node).id === "fireball-analytics-config");
+    const consentPanels = all.filter((node) => Object.hasOwn(attrs(node), "data-analytics-consent"));
+    const preferenceButtons = all.filter((node) => Object.hasOwn(attrs(node), "data-analytics-settings"));
+    const analyticsEligible = Boolean(analytics && route.indexable && !refresh && !/\bnoindex\b/i.test(robots));
+    const csp = attrs(requireOne(all, "meta", (a) => a["http-equiv"] === "Content-Security-Policy", file + ": CSP")).content;
+    assert.equal(configs.length, analyticsEligible ? 1 : 0, file + ": scoped Analytics configuration");
+    assert.equal(consentPanels.length, analyticsEligible ? 1 : 0, file + ": scoped consent panel");
+    assert.equal(preferenceButtons.length, analyticsEligible ? 1 : 0, file + ": scoped preferences link");
+    if (analyticsEligible) {
+      analyticsPages++;
+      assert.equal(attrs(configs[0]).type, "application/json", file + ": configuration is inert JSON");
+      assert.deepEqual(JSON.parse(text(configs[0])), analytics, file + ": consistent production stream");
+      assert.ok(Object.hasOwn(attrs(consentPanels[0]), "hidden") && Object.hasOwn(attrs(preferenceButtons[0]), "hidden"), file + ": controls defer to browser eligibility checks");
+      assert.ok(csp.includes("https://www.googletagmanager.com") && csp.includes("https://*.google-analytics.com"), file + ": collection permissions");
+    } else assert.doesNotMatch(csp, /google/, file + ": no inactive collection permission");
+    for (const node of all) {
+      const a = attrs(node);
+      assert.ok(!(node.tagName === "script" && a.src && /(?:googletagmanager|google-analytics)\.com/.test(a.src)), file + ": no Google script before consent");
+      assert.ok(!(node.tagName === "link" && /^(?:preconnect|dns-prefetch|preload|modulepreload)$/.test(a.rel) && /google/.test(a.href || "")), file + ": no Google connection hint before consent");
+    }
     assert.ok(!all.some((node) => node.tagName === "iframe" || node.tagName === "video"), file + ": no initial media player");
     for (const node of all) {
       const a = attrs(node);
@@ -255,7 +285,7 @@ export async function checkBuild() {
   assert.ok(markup.get("contact/index.html").includes("mailto:info@fireballstudios.co.uk"));
   await stat(join(dist, ".nojekyll"));
   assert.equal(failures.length, 0, failures.join("\n"));
-  return { htmlDocuments: pages.size, indexableCanonicals: indexableCanonicals.length, localLinkReferences: linkCount, localAssetReferences: assetCount, verifiedFragments: fragmentCount, srcsetCandidates: srcsetCount, imageElements: imageCount, jsonLdBlocks: schemaCount, homeSequences: chapters, completeFrames: 384, repositoryPrefixPaths: "passed", backendReferences: 0, initialPlayers: 0, outputBytes: await totalBytes(dist) };
+  return { htmlDocuments: pages.size, indexableCanonicals: indexableCanonicals.length, analyticsPages, analyticsStream: analytics?.measurementId ?? null, localLinkReferences: linkCount, localAssetReferences: assetCount, verifiedFragments: fragmentCount, srcsetCandidates: srcsetCount, imageElements: imageCount, jsonLdBlocks: schemaCount, homeSequences: chapters, completeFrames: 384, repositoryPrefixPaths: "passed", backendReferences: 0, initialPlayers: 0, outputBytes: await totalBytes(dist) };
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) console.log(JSON.stringify(await checkBuild(), null, 2));

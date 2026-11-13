@@ -40,6 +40,8 @@ jobs:
           FORM_PROVIDER: ${{ vars.FORM_PROVIDER || 'formsubmit' }}
           FORMSPREE_ENDPOINT: ${{ vars.FORMSPREE_ENDPOINT }}
           NETLIFY_FORM_URL: ${{ vars.NETLIFY_FORM_URL }}
+          GA_MEASUREMENT_ID: ${{ vars.GA_MEASUREMENT_ID }}
+          ENABLE_ANALYTICS: ${{ vars.ENABLE_ANALYTICS == 'true' && 'true' || 'false' }}
           NOINDEX: ${{ vars.FIREBALL_INDEXING_ENABLED == 'true' && 'false' || 'true' }}
       - run: npm run check:pages
       - uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4

@@ -2,7 +2,7 @@
 
 This is a separate static portfolio built with Vite 8, TypeScript 7 and GSAP. Its intended working folder is `fireball-gh-pages`. The existing Next.js project at `../website-FB` remains unchanged and is not a dependency of ordinary builds.
 
-The previous starter is preserved in `.archive/original-20261109`. It is an archive, not a deployment source. Publish only the new `dist/` output. This work has not published a website or changed DNS.
+The previous starter is preserved in `.archive/original-20261109`; it is not a deployment source. The static replacement was published on 9 November 2026. Publish only `dist/` and keep the original website backup. [LIVE_LAUNCH.md](LIVE_LAUNCH.md) records publication and rollback; a local edit or build does not publish a new release or change DNS.
 
 ## Start and build
 
@@ -47,11 +47,13 @@ Optionally copy `.env.example` to `.env` to set `SITE_URL` and `NOINDEX` for loc
 | Gallery selections, Vimeo and configurator launch/close behaviour | [src/components/gallery.ts](../src/components/gallery.ts), [src/components/media.ts](../src/components/media.ts) |
 | Scroll storytelling and bounded frame loading | [src/components/scroll-story.ts](../src/components/scroll-story.ts), [src/lib/frame-store.ts](../src/lib/frame-store.ts) |
 | Contact validation, hosted submission, email and copy-brief fallback | [src/components/contact.ts](../src/components/contact.ts) |
+| Analytics eligibility and page-data policy | [src/lib/analytics-settings.ts](../src/lib/analytics-settings.ts), [src/lib/analytics.ts](../src/lib/analytics.ts) |
+| Consent controls and browser lifecycle | [src/templates/analytics.ts](../src/templates/analytics.ts), [src/components/analytics-consent.ts](../src/components/analytics-consent.ts) |
 | Client initialisation | [src/main.ts](../src/main.ts) |
 
 Edit these source files instead of generated `index.html` files or `dist/`. After changing data or templates, run `npm run generate` and reload, or restart `npm run dev`; generation runs when the development command starts. CSS and client-code changes use Vite's normal development reload.
 
-The generator produces 20 page documents: 18 primary pages, a standalone `404.html` and an old-article redirect page. Text, links, headings and structured data are present in real HTML before JavaScript runs. The layout is not an empty client-rendered shell.
+The generator produces 32 page documents: 18 primary pages, a standalone `404.html`, an old-article redirect page and 12 legacy root HTML redirects. Text, links, headings and structured data are present in real HTML before JavaScript runs. The layout is not an empty client-rendered shell.
 
 ## Portfolio and media rules
 
@@ -73,9 +75,13 @@ Ordinary content edits need only the media already included here. `npm run prepa
 
 ## Contact delivery and activation
 
-The four fields are name, phone, email and project description. Default `FORM_PROVIDER=formsubmit` uses a native POST to `https://formsubmit.co/info@fireballstudios.co.uk`, keeping the provider’s security challenge. No provider JavaScript or email credential is loaded. The recipient must activate the form through their mailbox; test actual receipt before claiming it works. See [CONTACT_SETUP.md](CONTACT_SETUP.md).
+The four fields are name, phone, email and project description. Production selects `FORM_PROVIDER=netlify` with the approved public capture URL. Its isolated form uses CAPTCHA, stores an enquiry copy in the provider dashboard and requests a notification to the confirmed studio recipient. A labelled human test must still establish dashboard capture and inbox receipt. See [CONTACT_SETUP.md](CONTACT_SETUP.md).
 
-`FORM_PROVIDER=formspree` plus a verified `FORMSPREE_ENDPOINT` enables asynchronous sending and provider-acceptance status. `FORM_PROVIDER=email` retains the draft-only behaviour. All modes keep direct-email and copy-brief alternatives. The static site has no server API or database; a hosted provider processes submitted information as described in the privacy page.
+`FORM_PROVIDER=formspree` plus a verified `FORMSPREE_ENDPOINT` enables optional asynchronous sending; `FORM_PROVIDER=email` retains draft-only behaviour. FormSubmit remains a legacy alternative, not the current production transport: its thank-you page did not establish inbox receipt. The main static site has no custom server API or database; the chosen hosted provider processes submitted information as described in the privacy page.
+
+## Optional Analytics
+
+[ANALYTICS.md](ANALYTICS.md) documents the existing GA4 stream, public repository settings, consent and Realtime checks. Only eligible production pages include the controls/configuration; the Google Analytics tag waits for acceptance. Accept and reject are equally prominent, and the footer reopens preferences. Keep Enhanced Measurement off, advertising consent denied, query/form values out of page payloads and analytics absent from the isolated enquiry capture. Consent preferences and configured cookies have a 90-day lifetime. Local/noindex previews remain disabled.
 
 ## Content and verification
 
@@ -107,4 +113,4 @@ The owner has authorised the existing GitHub repository and fireballstudios.co.u
 - `NETLIFY_FORM_URL` and `FORM_PROVIDER=netlify`: public build settings for the approved capture host.
 - `docs/CONTACT_SETUP.md`: notification recipient, dashboard checks, tests, limits and redeployment.
 
-The original website remains on GitHub Pages. The separate provider hosts only a small form; it does not host the site’s animation media or use a custom server API.
+The main static website stays on GitHub Pages. The separate provider hosts only a small form; it does not host the site’s animation media or use a custom server API.

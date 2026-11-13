@@ -1,6 +1,7 @@
 import { getFormEndpoint, getNetlifyFormUrl } from "./form-endpoint";
+import { getAnalyticsMeasurementId } from "./analytics-settings";
 
-export interface BuildConfig { siteUrl: string; noIndex: boolean; development: boolean; formEndpoint?: string; netlifyFormUrl?: string; formProvider?: "formsubmit" | "formspree" | "netlify" | "email" }
+export interface BuildConfig { siteUrl: string; noIndex: boolean; development: boolean; formEndpoint?: string; netlifyFormUrl?: string; formProvider?: "formsubmit" | "formspree" | "netlify" | "email"; gaMeasurementId?: string }
 
 export function readBuildConfig(env: Record<string, string | undefined> = process.env, development = process.argv.includes("--dev")): BuildConfig {
   const value = env.SITE_URL || "https://fireballstudios.co.uk/";
@@ -13,7 +14,10 @@ export function readBuildConfig(env: Record<string, string | undefined> = proces
   if (!["formsubmit", "formspree", "netlify", "email"].includes(formProvider)) throw new Error("FORM_PROVIDER must be formsubmit, formspree, netlify or email.");
   if (formProvider === "formspree" && !formEndpoint) throw new Error("Formspree requires a verified public FORMSPREE_ENDPOINT.");
   if (formProvider === "netlify" && !netlifyFormUrl) throw new Error("Netlify capture requires an explicitly configured NETLIFY_FORM_URL.");
-  return { siteUrl: url.href.replace(/\/?$/, "/"), noIndex: development || env.NOINDEX !== "false", development, formEndpoint, netlifyFormUrl, formProvider: formProvider as BuildConfig["formProvider"] };
+  const siteUrl = url.href.replace(/\/?$/, "/");
+  const noIndex = development || env.NOINDEX !== "false";
+  const gaMeasurementId = getAnalyticsMeasurementId(env, { siteUrl, noIndex, development });
+  return { siteUrl, noIndex, development, formEndpoint, netlifyFormUrl, formProvider: formProvider as BuildConfig["formProvider"], gaMeasurementId };
 }
 
 export function pagePrefix(route: string): string {

@@ -7,10 +7,15 @@ import { getBusinessSchema, serialiseSchema } from "../src/lib/schema";
 import { getPageCsp } from "../src/lib/security";
 import { readBuildConfig, pagePrefix, canonicalUrl } from "../src/lib/build-config";
 import { getLegacyRoute } from "../src/data/legacyRoutes";
+import { analyticsPanel, analyticsPreferencesButton } from "../src/templates/analytics";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const config = readBuildConfig();
 const pages = buildPages(config);
+const analyticsRoutes = Object.fromEntries(pages.filter((page) => !page.noIndex && !page.redirect).map((page) => {
+  const path = new URL(canonicalUrl(page.route, config.siteUrl)).pathname.replace(/\/+$/, "") || "/";
+  return [path, (page.seoTitle ?? page.title) + " | Fireball Studios"];
+}));
 const packageInfo = JSON.parse(await readFile(join(root, "package.json"), "utf8"));
 if (packageInfo.name !== "fireball-studios-static") throw new Error("Refusing to generate outside the standalone static project.");
 const brandData = "data:image/webp;base64," + (await readFile(join(root, "public/brand/fireball-mark.webp"))).toString("base64");
@@ -29,7 +34,9 @@ function document(page: StaticPage): string {
   const noIndex = config.noIndex || page.noIndex;
   const title = (page.seoTitle ?? page.title) + " | Fireball Studios";
   const description = page.seoDescription ?? page.description;
-  const csp = getPageCsp(config, page.route);
+  const analyticsEnabled = Boolean(config.gaMeasurementId && !page.noIndex && !page.redirect && !missing);
+  const csp = getPageCsp(config, page.route, analyticsEnabled);
+  const analyticsData = analyticsEnabled ? `<script type="application/json" id="fireball-analytics-config">${serialiseSchema({ measurementId: config.gaMeasurementId, origin: new URL(config.siteUrl).origin, routes: analyticsRoutes })}</script>` : "";
   const styles = missing ? `<style>body{margin:0;background:#0f1115;color:#f4f3ef;font:16px/1.8 system-ui,sans-serif}.container{max-width:1100px;margin:auto;padding:10vw 28px}.eyebrow{color:#efa84e;font-size:13px;letter-spacing:.1em;text-transform:uppercase}h1{font-size:clamp(48px,8vw,110px);line-height:1.05;letter-spacing:-.06em;font-weight:500}p{max-width:650px;color:#bfc5ce}a{color:inherit}.button{display:inline-flex;align-items:center;gap:40px;padding:14px 24px;background:#efa84e;color:#101318;text-decoration:none;border-radius:4px}.missing-brand{display:flex;align-items:center;gap:12px;padding:24px 28px;border-bottom:1px solid #fff2}.missing-brand img{width:27px;height:46px;object-fit:contain}.missing-brand span{font-size:28px;font-weight:600;letter-spacing:-.06em}svg{width:20px;height:20px}:focus-visible{outline:2px solid #efa84e;outline-offset:5px}</style>` : `<link rel="stylesheet" href="${prefix}src/styles/site.css">`;
   const schemas = [...getBusinessSchema(config.siteUrl), ...(page.schemas || [])];
   return `<!doctype html>
@@ -45,10 +52,11 @@ ${page.redirect ? `<meta http-equiv="refresh" content="0; url=${e(page.redirect)
 ${styles}
 <noscript><style>.site-header{position:relative}.page-header{padding-top:70px}.story-copy{padding-top:90px}.film-poster .play-disc{display:none}button[data-video-trigger]{display:none}</style></noscript>
 <script type="application/ld+json">${serialiseSchema(schemas)}</script>
+${analyticsData}
 </head><body data-asset-base="${prefix}" data-page="${e(page.route || "home")}">
 ${missing ? `<div class="missing-brand"><img src="${brandData}" alt=""><span>fireball STUDIOS</span></div>` : `<a class="skip-link" href="#main">Skip to content</a>${navbar(prefix, page.route)}`}
 <main id="main">${page.body}</main>
-${missing ? "" : footer(prefix) + filmDialog() + `<script type="module" src="${prefix}src/main.ts"></script>`}
+${missing ? "" : footer(prefix, analyticsEnabled ? analyticsPreferencesButton() : "") + filmDialog() + (analyticsEnabled ? analyticsPanel(prefix) : "") + `<script type="module" src="${prefix}src/main.ts"></script>`}
 </body></html>\n`;
 }
 

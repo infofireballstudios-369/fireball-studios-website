@@ -29,7 +29,7 @@ The production preview runs at **http://127.0.0.1:4175/**. Publish only the cont
 - Home with the required H1, progressive 96-frame chapters3→6→5, featured sources3/5, capabilities, FAQs and contact links.
 - Six portfolio entries and category filters. Real Estate sources1/3/4, Architecture2, furniture/product5, and the Automotive configurator.
 - Original gallery stills only; Interactive Residence has exactly 3.4/3.5 plus its Vimeo film. The two furniture images are WebP derivatives of original 5.1/5.2 PNGs.
-- Industry links, the six-stage About process, four articles and a separate original spaceship concept article. Source6 is absent from the Projects portfolio.
+- Industry links, the six-stage About process and four articles, including the original spaceship concept. Source6 is absent from the Projects portfolio.
 - Compact name/phone/email/description contact form, accessible errors, direct email and brief-copy alternatives.
 - Privacy/terms, static404, old-article redirect, canonicals, social metadata, business/service/FAQ/article/breadcrumb schema and sitemap.
 - Local fonts, reduced-motion and short-viewport fallbacks, bounded frame decoding and explicit player lifecycle cleanup.
@@ -43,6 +43,12 @@ The main website stays on **GitHub Pages**. Its contact panel loads a small, iso
 The Netlify recipient confirmation has been verified. A real test must also confirm dashboard capture and inbox receipt; configuration alone is not proof of delivery. See [CONTACT_SETUP.md](docs/CONTACT_SETUP.md). Network/service errors keep the entered brief and show direct-email/copy alternatives. The old FormSubmit route returned a thank-you page without the owner receiving the test, so it is no longer the production transport.
 
 `npm run build:capture` creates the separate `capture-dist/` for the form host. The Pages build continues to publish only `dist/`, keeping all animation/media bandwidth on GitHub. Local development should load the public settings in `.env.example` as shown above.
+
+## Optional analytics
+
+GA4 uses the existing public measurement ID `G-7RV5GM0GCF`. Set the repository variables `GA_MEASUREMENT_ID` and `ENABLE_ANALYTICS=true` for eligible production builds; local/noindex and non-brand previews remain disabled. The Google Analytics tag loads only after acceptance, with equally prominent reject/accept choices and a persistent footer preference control. No private Google credential is needed.
+
+Keep Enhanced Measurement off as previously confirmed by the owner. Page/referrer fields are restricted, advertising features stay disabled, and the isolated Netlify form has no Analytics. Its reCAPTCHA security check is separate. See [analytics settings, consent and Realtime checks](docs/ANALYTICS.md); live receipt still needs the owner's Realtime observation after an accepted visit.
 
 ## Static hosting and indexing
 
@@ -64,6 +70,7 @@ GitHub's current Pages terms restrict using it to run an online business, e-comm
 
 - [SEO, topic/keyword map and launch guidance](docs/SEO_GUIDE.md)
 - [Contact activation and provider options](docs/CONTACT_SETUP.md)
+- [Optional GA4, consent and verification](docs/ANALYTICS.md)
 - [Native media quality and bandwidth budgets](docs/MEDIA_QUALITY.md)
 - [File and editing guide](docs/PROJECT_GUIDE.md)
 - [Deployment, indexing and hosting limits](docs/DEPLOYMENT.md)

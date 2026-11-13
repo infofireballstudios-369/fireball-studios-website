@@ -5,13 +5,14 @@ import { initContact } from "./components/contact";
 import { initGalleries } from "./components/gallery";
 import { initHeaderSizing } from "./components/header-size";
 import { initEnquiryFrame } from "./components/enquiry-frame";
+import { initAnalyticsConsent } from "./components/analytics-consent";
 
 let generation = 0;
 let disposers: (() => void)[] = [];
-function start() {
+function start(restored = false) {
   const current = ++generation;
   document.documentElement.classList.add("has-js");
-  disposers = [initHeaderSizing(), initNavigation(), initFilters(), initMedia(), initContact(), initEnquiryFrame(), initGalleries()];
+  disposers = [initAnalyticsConsent({ restored }), initHeaderSizing(), initNavigation(), initFilters(), initMedia(), initContact(), initEnquiryFrame(), initGalleries()];
   if (document.querySelector("[data-story]")) {
     void import("./components/scroll-story").then(async ({ initScrollStory }) => {
       if (current !== generation) return;
@@ -35,4 +36,4 @@ function stop() { generation++; disposers.forEach((dispose) => dispose()); dispo
 start();
 window.addEventListener("pagehide", stop);
 // Browser Back may restore a frozen page rather than execute its module again.
-window.addEventListener("pageshow", (event) => { if (event.persisted) start(); });
+window.addEventListener("pageshow", (event) => { if (event.persisted) start(true); });
